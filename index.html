@@ -48,7 +48,7 @@
     .section-content {
       display: none;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.2s linear;
     }
 
     .section-content.active {
@@ -56,16 +56,16 @@
       opacity: 1;
     }
 
-    #about, #team, #contact {
+    #about, #team, #contact, #shop {
       color: #ffffff;
     }
 
-    #about h2, #team h2, #contact h2 {
+    #about h2, #team h2, #contact h2, #shop h2 {
       font-size: 2.75rem;
       background-color: transparent;
     }
 
-    #about p, #contact p {
+    #about p, #contact p, #shop p {
       font-size: 1.2rem;
       background-color: transparent;
     }
@@ -84,7 +84,7 @@
       width: 0;
       height: 2px;
       background-color: #fff;
-      transition: all 0.3s ease;
+      transition: all 0.2s linear;
       transform: translateX(-50%);
     }
 
@@ -108,6 +108,18 @@
       border-radius: 10px;
     }
 
+    #shop,
+    #shop .card,
+    #shop .card-body {
+      color: rgb(255, 255, 255);
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    #shop {
+      border-radius: 10px;
+    }
+
     #loader {
       position: fixed;
       top: 0;
@@ -120,6 +132,41 @@
       align-items: center;
       z-index: 10000;
     }
+
+    /* Анимация плавного появления текста */
+    .fade-in {
+      opacity: 0;
+      animation: fadeInEffect 0.3s forwards;
+    }
+
+    @keyframes fadeInEffect {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Для каждого символа будет применяться анимация */
+    .fade-in span {
+      opacity: 0;
+      animation: fadeInEffect 0.035s forwards;
+      animation-delay: calc(0.005s * var(--i)); /* Задержка для каждого символа */
+    }
+
+    .text-container {
+      margin-top: 20px; /* Добавим отступ между двумя блоками */
+    }
+
+    .card {
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
   </style>
 </head>
 <body>
@@ -136,18 +183,22 @@
       <button class="nav-link btn btn-link text-white" onclick="showSection('about')">About Us</button>
       <button class="nav-link btn btn-link text-white" onclick="showSection('team')">Crew Team</button>
       <button class="nav-link btn btn-link text-white" onclick="showSection('contact')">Contacts</button>
+      <button class="nav-link btn btn-link text-white" onclick="showSection('shop')">Shop</button>
     </nav>
   </header>
 
   <main class="container my-5">
     <section id="about" class="section-content active">
       <h2 class="text-center mb-1">About Us</h2>
-      <p class="text-center">
-        "Rammstein" is a German industrial metal band formed in 1994 in Berlin. Known for their heavy, guitar-driven sound, deep vocals, and theatrical live performances featuring pyrotechnics, they blend elements of metal, electronic, and classical music. Their lyrics often explore controversial and dark themes, sometimes using irony and wordplay. The band's most famous songs include Du Hast, Sonne, and Mein Herz Brennt. They primarily sing in German but have gained international success.
-        <br><br>
-        We're a parody band that strives to be the Rammstein of the ROBLOX platform. We make no assertions of legal ownership concerning the music, rights, or IP related to Rammstein or Universal Music.
-      </p>
+    <p class="text-center">
+      <span id="aboutText" class="fade-in"></span>
+    </p>
+    <p class="text-center">
+      <span id="aboutText2" class="fade-in"></span>
+    </p>
+
     </section>
+
 
     <section id="team" class="section-content">
       <h2 class="text-center mb-4">Crew Team</h2>
@@ -196,12 +247,155 @@
 
     <section id="contact" class="section-content">
       <h2 class="text-center mb-4">Contacts</h2>
-      <p class="text-center">
-        <a href="https://www.roblox.com/communities/35751499/RAMMSTEIN-ROBLOX-OFFICIAL#!/about" target="_blank">Roblox Community</a>
-      </p>
-      <p class="text-center">
-        <a href="https://discord.gg/S6ZYDD2rqq" target="_blank">Discord Server</a>
-      </p>
+      <div class="text-center">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img src="https://i.yapx.ru/Y9HLN.png" alt="Roblox" style="width: 24px; height: 24px; object-fit: contain;">
+          <a href="https://www.roblox.com/communities/35751499" target="_blank">Roblox Community (Group)</a>
+        </div>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+          <img src="https://i.yapx.ru/Y9HLv.png" alt="Discord" style="width: 24px; height: 24px; object-fit: contain;">
+          <a href="https://discord.gg/S6ZYDD2rqq" target="_blank">Discord Server</a>
+        </div>
+    </div>
+
+    </section>
+    
+    <section id="shop" class="section-content">
+      <h2 class="text-center mb-4">Appareal</h2>
+      <div class="row justify-content-center">
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-0fc02cd145ba26814c0166cafa4009f1/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="JA! NEIN!">
+            <div class="card-body">
+              <h5 class="card-title">JA! NEIN!</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/93772734998933/Shirt-JA-NEIN-RAMMSTEIN-ROBLOX" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-b04cc9169b9a204fc21ff289709fc3ef/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Radio">
+            <div class="card-body">
+              <h5 class="card-title">Radio</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/123188642168652" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-f28d0a476aa876ae279eed987d918c41/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Amerika">
+            <div class="card-body">
+              <h5 class="card-title">Amerika</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/127161923247635/Shirt-Amerika-RAMMSTEIN-ROBLOX" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-3dc9b3045fb676562d513ed5bcc6ab45/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Legende">
+            <div class="card-body">
+              <h5 class="card-title">Legende</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/87247233678132" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-5d600dbeb09ecd04601101d1bfac9cea/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Insekt">
+            <div class="card-body">
+              <h5 class="card-title">Insekt</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/81148073913823/Shirt-Insekt-RAMMSTEIN-ROBLOX" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-cb71cff763a64258f9619ed8d05c12c7/420/420/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Keine Rast">
+            <div class="card-body">
+              <h5 class="card-title">Keine Rast</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/133415894302328" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-ac6cb00baafbdc7da81a30b9f4b1ed70/150/150/Shirt/Png/noFilter" class="card-img-top" style="border-radius: 15px;" alt="EST. 1994">
+            <div class="card-body">
+              <h5 class="card-title">EST. 1994</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/96955201877168" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-c3d8651c5e876b30f130e8b875db0b18/150/150/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Der letzte Weg">
+            <div class="card-body">
+              <h5 class="card-title">Der letzte Weg</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/139592875171260" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-3b2b35bb6817f3a8779991cd33faf857/150/150/Shirt/Png/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Weisse Balken">
+            <div class="card-body">
+              <h5 class="card-title">Weisse Balken</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/120672515357494" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-87aac5b17c01439cbf044e6a88442ba2/150/150/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Komm in mein Boot">
+            <div class="card-body">
+              <h5 class="card-title">Komm in mein Boot</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/115402596447482" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-d8fa8f401b353980facf9ddecbbabae2/150/150/Shirt/Png/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Lügen">
+            <div class="card-body">
+              <h5 class="card-title">Lügen</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/77973202750438" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="card shadow-sm h-100 text-center">
+            <img src="https://tr.rbxcdn.com/180DAY-6f3a554e16849e258ab3590c190ae260/150/150/Shirt/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="Kill Till">
+            <div class="card-body">
+              <h5 class="card-title">Kill Till</h5>
+            <p class="text-center">
+              <a href="https://www.roblox.com/catalog/109880418655398" target="_blank">Buy</a>
+            </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -216,7 +410,6 @@
 
       if (document.getElementById(id).classList.contains('active')) return;
 
-      // Показываем черный экран
       loader.style.display = 'flex';
 
       sections.forEach(section => {
@@ -233,7 +426,75 @@
 
     window.addEventListener('load', () => {
       document.getElementById('loader').style.display = 'none';
+
+      const aboutText = "Rammstein is a German industrial metal band formed in 1994 in Berlin. Known for their heavy, guitar-driven sound, deep vocals, and theatrical live performances featuring pyrotechnics, they blend elements of metal, electronic, and classical music. Their lyrics often explore controversial and dark themes, sometimes using irony and wordplay. The band's most famous songs include Du Hast, Sonne, and Mein Herz Brennt. They primarily sing in German but have gained international success.";
+  
+      const aboutText2 = "We're a parody band that strives to be the Rammstein of the ROBLOX platform. We make no assertions of legal ownership concerning the music, rights, or IP related to Rammstein or Universal Music.";
+  
+      const aboutTextContainer = document.getElementById('aboutText');
+      aboutText.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.setProperty('--i', index);
+        aboutTextContainer.appendChild(span);
+      });
+  
+      const aboutTextContainer2 = document.getElementById('aboutText2');
+      const offset = aboutText.length;
+
+      aboutText2.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.style.setProperty('--i', offset + index);
+        aboutTextContainer2.appendChild(span);
+      });
+
+  });
+  </script>
+
+  <script>
+  function showSection(id) {
+    const sections = document.querySelectorAll('.section-content');
+    sections.forEach(section => {
+      section.classList.remove('active');
     });
+    const targetSection = document.getElementById(id);
+    if (targetSection) {
+      targetSection.classList.add('active');
+    }
+
+    if (id === 'shop') {
+      observeCards();
+    }
+  }
+
+  window.addEventListener("load", function () {
+    const loader = document.getElementById("loader");
+    loader.style.display = "none";
+  });
+
+  function observeCards() {
+      const cards = document.querySelectorAll("#shop .card");
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.1
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          } else {
+            entry.target.classList.remove("visible");
+          }
+        });
+      }, observerOptions);
+
+      cards.forEach(card => {
+        observer.observe(card);
+      });
+    }
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
