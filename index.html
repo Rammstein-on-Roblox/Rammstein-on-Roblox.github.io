@@ -7,37 +7,33 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    /* Подключение Rodchenko Font */
     @font-face {
       font-family: "Rodchenko Grotesk ML";
       src: url('fonts/RodchenkoGroteskML.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
     }
     @font-face {
       font-family: "Rodchenko-Bold";
       src: url('fonts/Rodchenko-Bold.ttf') format('truetype');
       font-weight: bold;
-      font-style: normal;
     }
     @font-face {
       font-family: "Rodchenko";
       src: url('fonts/RodchenkoCTT.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
     }
     @font-face {
       font-family: "RAMMSTEIN";
       src: url('fonts/RAMMSTEINFont.ttf') format('truetype');
-      font-weight: normal;
-      font-style: normal;
     }
 
     html, body {
       height: 100%;
       margin: 0;
       font-family: 'Rodchenko-Bold', sans-serif;
-      font-weight: normal;
+      background-image: url('https://i.yapx.ru/Y9BvJ.png');
+      background-repeat: repeat;
+      background-size: auto;
+      background-position: top left;
+      background-attachment: fixed;
     }
 
     body {
@@ -51,48 +47,35 @@
 
     .section-content {
       display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
     .section-content.active {
       display: block;
+      opacity: 1;
     }
 
-    /* Увеличение шрифта в заголовке About Us */
-    #about h2 {
-      font-size: 2.75rem;
-    }
-    #about h2 {
-      background-color: #ffffff00;
-    }
-    #about {
-      color: #ffffff; /* Желтый цвет текста */
-    }
-    #team {
-      color: #ffffff; /* Желтый цвет текста */
-    }
-    #contact {
+    #about, #team, #contact {
       color: #ffffff;
     }
-    #about p {
-      background-color: #ffffff00;
-    }
-    #team h2 {
+
+    #about h2, #team h2, #contact h2 {
       font-size: 2.75rem;
+      background-color: transparent;
     }
-    #contact h2 {
-      font-size: 2.75rem;
-    }
-    #contact p {
-      font-size: 1.5rem;
-    }
-    #about p {
+
+    #about p, #contact p {
       font-size: 1.2rem;
+      background-color: transparent;
     }
+
     .nav-link {
       position: relative;
       overflow: hidden;
       font-size: 1.2rem;
     }
+
     .nav-link::after {
       content: '';
       position: absolute;
@@ -104,35 +87,38 @@
       transition: all 0.3s ease;
       transform: translateX(-50%);
     }
+
     .nav-link:hover::after {
       width: 100%;
     }
+
     .nav-link:hover {
       color: #000;
     }
+
+    #team,
+    #team .card,
+    #team .card-body {
+      color: rgb(255, 255, 255);
+      background-color: transparent !important;
+      background-image: none !important;
+    }
+
+    #team {
+      border-radius: 10px;
+    }
+
     #loader {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.9);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 10000;
-    }
-    .bg-slide {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      transition: opacity 1s ease-in-out;
-      z-index: -1;
     }
   </style>
 </head>
@@ -144,7 +130,6 @@
     </div>
   </div>
 
-
   <header class="text-white text-center py-4" style="background-color: rgba(0, 0, 0, 0);">
     <h1>RAMMSTEIN ROBLOX</h1>
     <nav class="nav justify-content-center">
@@ -154,9 +139,7 @@
     </nav>
   </header>
 
-
   <main class="container my-5">
-
     <section id="about" class="section-content active">
       <h2 class="text-center mb-1">About Us</h2>
       <p class="text-center">
@@ -171,7 +154,7 @@
       <div class="row justify-content-center">
         <div class="col-md-3 mb-3">
           <div class="card shadow-sm h-100 text-center">
-            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2F2AF969EE22518D7E258D088B2EDED6-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" alt="EMBERIITO">
+            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2F2AF969EE22518D7E258D088B2EDED6-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="EMBERIITO">
             <div class="card-body">
               <h5 class="card-title">EMBERIITO</h5>
               <p class="card-text">Community Owner</p>
@@ -181,7 +164,7 @@
 
         <div class="col-md-3 mb-3">
           <div class="card shadow-sm h-100 text-center">
-            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0E93CD041C4DF56B28A44BA4968974B4-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" alt="EMBERIITO">
+            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0E93CD041C4DF56B28A44BA4968974B4-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="danchik3421">
             <div class="card-body">
               <h5 class="card-title">danchik3421</h5>
               <p class="card-text">Community Owner</p>
@@ -191,7 +174,7 @@
 
         <div class="col-md-3 mb-3">
           <div class="card shadow-sm h-100 text-center">
-            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0702603EC19891870D35F31EC6120C10-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" alt="EMBERIITO">
+            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-0702603EC19891870D35F31EC6120C10-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="RobotonikDev">
             <div class="card-body">
               <h5 class="card-title">RobotonikDev</h5>
               <p class="card-text">Scripter</p>
@@ -201,7 +184,7 @@
         
         <div class="col-md-3 mb-3">
           <div class="card shadow-sm h-100 text-center">
-            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2F03285B0F5DC6F0424A0FE53CFECCD7-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" alt="EMBERIITO">
+            <img src="https://tr.rbxcdn.com/30DAY-AvatarHeadshot-2F03285B0F5DC6F0424A0FE53CFECCD7-Png/150/150/AvatarHeadshot/Webp/noFilter" class="card-img-top" style="border-radius: 15px;" alt="ghbbhhw2265">
             <div class="card-body">
               <h5 class="card-title">ghbbhhw2265</h5>
               <p class="card-text">Scripter</p>
@@ -214,11 +197,12 @@
     <section id="contact" class="section-content">
       <h2 class="text-center mb-4">Contacts</h2>
       <p class="text-center">
-        <a href="https://www.roblox.com/communities/35751499/RAMMSTEIN-ROBLOX-OFFICIAL#!/about" target="_blank">Roblox Community</a></p>
+        <a href="https://www.roblox.com/communities/35751499/RAMMSTEIN-ROBLOX-OFFICIAL#!/about" target="_blank">Roblox Community</a>
+      </p>
       <p class="text-center">
-        <a href="https://discord.gg/S6ZYDD2rqq" target="_blank">Discord Server</a></p>
+        <a href="https://discord.gg/S6ZYDD2rqq" target="_blank">Discord Server</a>
+      </p>
     </section>
-
   </main>
 
   <footer class="text-white text-center py-3" style="background-color: rgba(0, 0, 0, 0);">
@@ -228,32 +212,27 @@
   <script>
     function showSection(id) {
       const sections = document.querySelectorAll('.section-content');
-      sections.forEach(section => section.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
+      const loader = document.getElementById('loader');
+
+      if (document.getElementById(id).classList.contains('active')) return;
+
+      // Показываем черный экран
+      loader.style.display = 'flex';
+
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+
+      const activeSection = document.getElementById(id);
+      activeSection.classList.add('active');
+
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 325);
     }
 
-    const backgrounds = [
-      'https://i.yapx.ru/Y8r5S.jpg'
-    ];
-
-    let imagesLoaded = 0;
-    const totalImages = backgrounds.length;
-
-    backgrounds.forEach((url) => {
-      const bgElement = document.createElement('div');
-      bgElement.classList.add('bg-slide');
-      bgElement.style.backgroundImage = `url(${url})`;
-      document.body.appendChild(bgElement);
-
-      const img = new Image();
-      img.src = url;
-      img.onload = function() {
-        imagesLoaded++;
-        if (imagesLoaded === totalImages) {
-          document.getElementById('loader').style.display = 'none';
-          bgElement.style.opacity = '1';
-        }
-      };
+    window.addEventListener('load', () => {
+      document.getElementById('loader').style.display = 'none';
     });
   </script>
 
