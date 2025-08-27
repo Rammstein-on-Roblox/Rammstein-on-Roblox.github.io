@@ -3,6 +3,7 @@
 @font-face{font-family:"Rodchenko";src:url('fonts/RodchenkoCTT.ttf') format('truetype');}
 @font-face{font-family:"RAMMSTEIN";src:url('fonts/RAMMSTEINFont.ttf') format('truetype');}
 
+*{cursor:url(img/ArrowCursor.png) 40 40, auto !important;}
 html,body {
       height:100%;margin:0;
       font-family:'Rodchenko-Bold',sans-serif;
