@@ -11,8 +11,8 @@ html,body {
 }
 body{display:flex;flex-direction:column;}
 main{flex:1;}
-a{text-decoration-style:none;}
-a:hover{text-decoration-style:underline;}
+a{text-decoration:none;}
+a:hover{text-decoration:underline;}
 .section-content{display:none;opacity:0;transition:opacity 0.2s linear;}
 .section-content.active{display:block;opacity: 1;}
 
