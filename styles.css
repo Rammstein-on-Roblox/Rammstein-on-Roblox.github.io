@@ -16,7 +16,7 @@ a:hover{text-decoration:underline;}
 .section-content{display:none;opacity:0;transition:opacity 0.2s linear;}
 .section-content.active{display:block;opacity: 1;}
 
-#about,#team,#contact,#shop{color:#ffffff;}
+#about,#team,#social_media,#shop{color:#ffffff;}
 #about h2,#team h2,#contact h2,#shop h2{font-size:2.75rem;background-color:transparent;}
 #about p,#contact p,#shop p{font-size:1.2rem;background-color:transparent;}
 
