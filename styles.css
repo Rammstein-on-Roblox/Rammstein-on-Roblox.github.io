@@ -26,8 +26,8 @@ a:hover{text-decoration:underline;}
 .nav-link:hover::after{width:100%;}
 .nav-link:hover{color:#000;}
 
-#team,#team .card,#team .card-body{color:rgb(255, 255, 255);background-color:transparent !important;background-image:none !important;}
-#team{border-radius: 10px;}
+#team,#team .card,#team .card-body{color:rgb(255,255,255);background-color:transparent !important;background-image:none !important;}
+#team{border-radius:10px;}
 
 #shop,#shop .card,#shop .card-body{color:rgb(255,255,255);background-color:transparent !important;background-image:none !important;}
 #shop{border-radius:10px;}

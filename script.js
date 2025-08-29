@@ -94,42 +94,187 @@ const users = [
 ];
 
 async function loadItems() {
-    const groupId = 35751499;
-    const targetUrl = `https://catalog.roblox.com/v2/search/items/details?Category=3&CreatorType=Group&CreatorTargetId=${groupId}`;
+    const groupId = 7388400234;
+    const targetUrl = `https://catalog.roblox.com/v2/search/items/details?Category=3&CreatorType=user&CreatorTargetId=${groupId}`;
     const container = document.getElementById('items-container');
     
+    if (!container) {
+        console.error('Container not found');
+        return;
+    }
+
     const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=";
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
-        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+        // Получаем данные о предметах
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
+            signal: controller.signal
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            throw new TypeError("Expected JSON but got " + contentType);
+        }
+        
         const data = await response.json();
 
         if (data.data && data.data.length > 0) {
-            data.data.forEach(item => {
-                const col = document.createElement('div');
-                col.className = 'col-md-4 mb-4';
+            container.innerHTML = '';
+            
+            // Фильтруем только ассеты (одежду)
+            const assetItems = data.data.filter(item => 
+                item.itemType === "Asset" && 
+                [8, 11, 12, 17, 18, 27, 28, 29, 30, 31, 41, 42, 43].includes(item.assetType)
+            );
 
-                const card = `
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100 text-center">
-                        <img src="${item.imageUrl}" class="card-img-top" alt="${item.name}">
-                        <div class="card-body">
-                            <h5 class="card-title">${item.name}</h5>
-                            <p class="text-center">
-                                <a href="https://www.roblox.com/catalog/${item.id}" target="_blank" class="btn btn-primary">Buy</a>
-                            </p>
+            if (assetItems.length > 0) {
+                // Создаем карточки с плейсхолдерами
+                assetItems.forEach(item => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4 mb-4';
+                    col.id = `item-${item.id}`;
+                    col.innerHTML = `
+                        <div class="card shadow-sm h-100 text-center">
+                            <div class="card-img-top" style="height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">${item.name}</h5>
+                                <p class="card-text small">Type: ${getAssetTypeName(item.assetType)}</p>
+                                <p class="text-center">
+                                    <a href="https://www.roblox.com/catalog/${item.id}" target="_blank" class="btn btn-primary btn-sm">View Item</a>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                `;
-                col.innerHTML = card;
-                container.appendChild(col);
-            });
+                    `;
+                    container.appendChild(col);
+                });
+
+                // Загружаем изображения для каждого предмета
+                const imagePromises = assetItems.map(async (item) => {
+                    try {
+                        // Пробуем несколько вариантов получения изображения
+                        const urlsToTry = [
+                            `https://thumbnails.roblox.com/v1/assets?assetIds=${item.id}&size=420x420&format=Png`,
+                            `https://thumbnails.roblox.com/v1/assets?assetIds=${item.id}&size=150x150&format=Png`,
+                            `https://www.roblox.com/asset-thumbnail/image?assetId=${item.id}&width=420&height=420&format=Png`
+                        ];
+
+                        let imageUrl = null;
+                        
+                        for (const url of urlsToTry) {
+                            try {
+                                const imageResponse = await fetch(proxyUrl + encodeURIComponent(url));
+                                if (imageResponse.ok) {
+                                    const imageData = await imageResponse.json();
+                                    if (imageData.data && imageData.data.length > 0 && imageData.data[0].imageUrl) {
+                                        imageUrl = imageData.data[0].imageUrl;
+                                        break;
+                                    }
+                                }
+                            } catch (e) {
+                                continue;
+                            }
+                        }
+
+                        const itemElement = document.getElementById(`item-${item.id}`);
+                        if (itemElement) {
+                            const imgElement = itemElement.querySelector('.card-img-top');
+                            if (imgElement) {
+                                imgElement.innerHTML = '';
+                                imgElement.style.background = 'none';
+                                
+                                if (imageUrl) {
+                                    const img = document.createElement('img');
+                                    img.src = imageUrl;
+                                    img.alt = item.name;
+                                    img.className = 'w-100 h-100';
+                                    img.style.objectFit = 'cover';
+                                    img.onerror = () => {
+                                        // Если изображение не загружается, показываем плейсхолдер
+                                        showImagePlaceholder(imgElement, item.name);
+                                    };
+                                    imgElement.appendChild(img);
+                                } else {
+                                    // Если изображение не найдено, показываем плейсхолдер
+                                    showImagePlaceholder(imgElement, item.name);
+                                }
+                            }
+                        }
+                    } catch (error) {
+                        console.error(`Error loading image for item ${item.id}:`, error);
+                        const itemElement = document.getElementById(`item-${item.id}`);
+                        if (itemElement) {
+                            const imgElement = itemElement.querySelector('.card-img-top');
+                            if (imgElement) {
+                                showImagePlaceholder(imgElement, item.name);
+                            }
+                        }
+                    }
+                });
+
+                await Promise.allSettled(imagePromises);
+
+            } else {
+                container.innerHTML = '<p class="text-center">No clothing items found.</p>';
+            }
         } else {
             container.innerHTML = '<p class="text-center">No items found.</p>';
         }
+        
     } catch (error) {
-        console.error('Error fetching items:', error);
-        container.innerHTML = '<p class="text-center">Failed to load items.</p>';
+        if (error.name === 'AbortError') {
+            console.error('Request timed out');
+            container.innerHTML = '<p class="text-center">Request timed out. Please try again.</p>';
+        } else if (error instanceof TypeError) {
+            console.error('Network or JSON error:', error);
+            container.innerHTML = '<p class="text-center">Network error or invalid data.</p>';
+        } else {
+            console.error('Error fetching items:', error);
+            container.innerHTML = '<p class="text-center">Failed to load items.</p>';
+        }
+    } finally {
+        clearTimeout(timeoutId);
+    }
+
+    // Вспомогательная функция для отображения плейсхолдера
+    function showImagePlaceholder(imgElement, itemName) {
+        imgElement.innerHTML = '';
+        imgElement.style.background = 'none';
+        
+        const placeholder = document.createElement('div');
+        placeholder.className = 'w-100 h-100 d-flex flex-column align-items-center justify-content-center';
+        placeholder.style.background = '#e9ecef';
+        
+        const icon = document.createElement('i');
+        icon.className = 'fas fa-image fa-3x text-muted mb-2';
+        
+        const text = document.createElement('small');
+        text.className = 'text-muted text-center';
+        text.textContent = 'No image available';
+        text.style.fontSize = '12px';
+        
+        placeholder.appendChild(icon);
+        placeholder.appendChild(text);
+        imgElement.appendChild(placeholder);
+    }
+
+    // Вспомогательная функция для получения названия типа ассета
+    function getAssetTypeName(assetType) {
+        const assetTypes = {
+            8: 'Hat', 11: 'Shirt', 12: 'Pants', 17: 'Head', 18: 'Face',
+            27: 'Torso', 28: 'Right Arm', 29: 'Left Arm', 30: 'Left Leg',
+            31: 'Right Leg', 41: 'Hair', 42: 'Glasses', 43: 'Accessory'
+        };
+        return assetTypes[assetType] || `Unknown (${assetType})`;
     }
 }
 
@@ -145,7 +290,7 @@ function showSection(id) {
     sections.forEach(section => {section.classList.remove('active');});
     const targetSection = document.getElementById(id);
     if (targetSection) {targetSection.classList.add('active');}
-    if (id === 'shop') {loadItems();observeCards();}
+    if (id === 'shop') {observeCards();loadItems();}
     if (id === 'team') {observeCards();loadRobloxAvatars(users);}
 }
 
