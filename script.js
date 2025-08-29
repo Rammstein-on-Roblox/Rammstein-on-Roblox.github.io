@@ -16,14 +16,12 @@ async function loadRobloxAvatars(usersToShow) {
     const LOADING_IMAGE = 'img/roblox-150.png';
 
     const PROXY_SERVERS = [
-        "https://api.allorigins.win/raw?url=",
         "https://api.codetabs.com/v1/proxy?quest="
     ];
 
     for (let i = 0; i < usersToShow.length; i += BATCH_SIZE) {
         const batch = usersToShow.slice(i, i + BATCH_SIZE);
-        
-        // Показываем загрузку
+      
         batch.forEach((user) => {
             const img = document.getElementById(`img-${user.originalIndex}`);
             if (img) img.src = LOADING_IMAGE;
@@ -37,8 +35,6 @@ async function loadRobloxAvatars(usersToShow) {
             const apiUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userIds.join(',')}&size=150x150&format=Png&isCircular=false`;
             
             let avatarData = null;
-            
-            // Параллельные запросы ко всем прокси
             const proxyPromises = PROXY_SERVERS.map(proxy => 
                 fetch(proxy + encodeURIComponent(apiUrl), {
                     headers: { 'Accept': 'application/json' }
@@ -49,8 +45,6 @@ async function loadRobloxAvatars(usersToShow) {
                     return null;
                 })
             );
-
-            // Используем первый успешный ответ
             const results = await Promise.allSettled(proxyPromises);
             for (const result of results) {
                 if (result.status === 'fulfilled' && result.value && result.value.data) {
@@ -58,8 +52,6 @@ async function loadRobloxAvatars(usersToShow) {
                     break;
                 }
             }
-
-            // Обновляем изображения
             batch.forEach((user) => {
                 const img = document.getElementById(`img-${user.originalIndex}`);
                 if (!img) return;
@@ -67,7 +59,6 @@ async function loadRobloxAvatars(usersToShow) {
                 if (avatarData && avatarData.data) {
                     const userAvatar = avatarData.data.find(item => item.targetId === parseInt(user.id));
                     if (userAvatar && userAvatar.imageUrl) {
-                        // Предзагрузка изображения
                         const tempImg = new Image();
                         tempImg.onload = function() {
                             img.src = userAvatar.imageUrl;
@@ -94,13 +85,53 @@ async function loadRobloxAvatars(usersToShow) {
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES_MS));
     }
 }
-// Пример использования
+// ЮЗЕРОВ УКАЗЫВАТЬ ТУТ
 const users = [
     { id: "7388400234", originalIndex: 0 },
     { id: "1280794069", originalIndex: 1 },
     { id: "1351405260", originalIndex: 2 },
     { id: "1775352085", originalIndex: 3 },
 ];
+
+async function loadItems() {
+    const groupId = 35751499;
+    const targetUrl = `https://catalog.roblox.com/v2/search/items/details?Category=3&CreatorType=Group&CreatorTargetId=${groupId}`;
+    const container = document.getElementById('items-container');
+    
+    const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=";
+    try {
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+        const data = await response.json();
+
+        if (data.data && data.data.length > 0) {
+            data.data.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col-md-4 mb-4';
+
+                const card = `
+                <div class="col-md-4 mb-4">
+                    <div class="card shadow-sm h-100 text-center">
+                        <img src="${item.imageUrl}" class="card-img-top" alt="${item.name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.name}</h5>
+                            <p class="text-center">
+                                <a href="https://www.roblox.com/catalog/${item.id}" target="_blank" class="btn btn-primary">Buy</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                `;
+                col.innerHTML = card;
+                container.appendChild(col);
+            });
+        } else {
+            container.innerHTML = '<p class="text-center">No items found.</p>';
+        }
+    } catch (error) {
+        console.error('Error fetching items:', error);
+        container.innerHTML = '<p class="text-center">Failed to load items.</p>';
+    }
+}
 
 function showSection(id) {
     const sections = document.querySelectorAll('.section-content');
@@ -114,7 +145,7 @@ function showSection(id) {
     sections.forEach(section => {section.classList.remove('active');});
     const targetSection = document.getElementById(id);
     if (targetSection) {targetSection.classList.add('active');}
-    if (id === 'shop') {observeCards();}
+    if (id === 'shop') {loadItems();observeCards();}
     if (id === 'team') {observeCards();loadRobloxAvatars(users);}
 }
 
