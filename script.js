@@ -11,7 +11,7 @@ window.addEventListener('load', () => {
 
 async function loadRobloxAvatars(usersToShow) {
     const BATCH_SIZE = 10;
-    const DELAY_BETWEEN_BATCHES_MS = 1;
+    const DELAY_BETWEEN_BATCHES_MS = 100;
     const DEFAULT_AVATAR = 'img/1.png';
     const LOADING_IMAGE = 'img/roblox-150.png';
 
@@ -115,7 +115,7 @@ function showSection(id) {
     const targetSection = document.getElementById(id);
     if (targetSection) {targetSection.classList.add('active');}
     if (id === 'shop') {observeCards();}
-    if (id === 'team') {loadRobloxAvatars(users, 0);observeCards();}
+    if (id === 'team') {observeCards();loadRobloxAvatars(users);}
 }
 
 window.addEventListener("load", function () {const loader = document.getElementById("loader");loader.style.display = "none";});
