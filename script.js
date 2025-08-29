@@ -10,87 +10,43 @@ window.addEventListener('load', () => {
 });
 
 async function loadRobloxAvatars(usersToShow) {
-    const BATCH_SIZE = 10;
-    const DELAY_BETWEEN_BATCHES_MS = 100;
-    const DEFAULT_AVATAR = 'img/1.png';
-    const LOADING_IMAGE = 'img/roblox-150.png';
-
-    const PROXY_SERVERS = [
-        "https://api.codetabs.com/v1/proxy?quest="
-    ];
-
+    const BATCH_SIZE = 10;const DELAY_BETWEEN_BATCHES_MS = 100;
+    const DEFAULT_AVATAR = 'img/1.png';const LOADING_IMAGE = 'img/roblox-150.png';
+    const PROXY_SERVERS = ["https://api.codetabs.com/v1/proxy?quest="];
     for (let i = 0; i < usersToShow.length; i += BATCH_SIZE) {
         const batch = usersToShow.slice(i, i + BATCH_SIZE);
-      
-        batch.forEach((user) => {
-            const img = document.getElementById(`img-${user.originalIndex}`);
-            if (img) img.src = LOADING_IMAGE;
-        });
-
+        batch.forEach((user) => {const img = document.getElementById(`img-${user.originalIndex}`);if (img) img.src = LOADING_IMAGE;});
         const validUsers = batch.filter(user => user.id && !isNaN(Number(user.id)));
         if (validUsers.length === 0) continue;
-
         try {
             const userIds = validUsers.map(user => user.id);
-            const apiUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userIds.join(',')}&size=150x150&format=Png&isCircular=false`;
-            
+            const apiUrl = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userIds.join(',')}&size=420x420&format=Png&isCircular=false`;
             let avatarData = null;
             const proxyPromises = PROXY_SERVERS.map(proxy => 
-                fetch(proxy + encodeURIComponent(apiUrl), {
-                    headers: { 'Accept': 'application/json' }
-                })
+                fetch(proxy + encodeURIComponent(apiUrl), {headers: { 'Accept': 'application/json' }})
                 .then(response => response.ok ? response.json() : null)
-                .catch(e => {
-                    console.error(`Proxy error (${proxy}):`, e);
-                    return null;
-                })
+                .catch(e => {console.error(`Proxy error (${proxy}):`, e);return null;})
             );
             const results = await Promise.allSettled(proxyPromises);
-            for (const result of results) {
-                if (result.status === 'fulfilled' && result.value && result.value.data) {
-                    avatarData = result.value;
-                    break;
-                }
-            }
-            batch.forEach((user) => {
-                const img = document.getElementById(`img-${user.originalIndex}`);
+            for (const result of results) {if (result.status === 'fulfilled' && result.value && result.value.data) {avatarData = result.value;break;}}
+            batch.forEach((user) => {const img = document.getElementById(`img-${user.originalIndex}`);
                 if (!img) return;
-
                 if (avatarData && avatarData.data) {
                     const userAvatar = avatarData.data.find(item => item.targetId === parseInt(user.id));
                     if (userAvatar && userAvatar.imageUrl) {
-                        const tempImg = new Image();
-                        tempImg.onload = function() {
-                            img.src = userAvatar.imageUrl;
-                        };
-                        tempImg.onerror = function() {
-                            img.src = DEFAULT_AVATAR;
-                        };
-                        tempImg.src = userAvatar.imageUrl;
-                        return;
+                        const tempImg = new Image();tempImg.onload = function() {img.src = userAvatar.imageUrl;};
+                        tempImg.onerror = function() {img.src = DEFAULT_AVATAR;};tempImg.src = userAvatar.imageUrl;return;
                     }
-                }
-                
-                img.src = DEFAULT_AVATAR;
+                }img.src = DEFAULT_AVATAR;
             });
-
-        } catch (error) {
-            console.error('Batch avatar load error:', error);
-            batch.forEach((user) => {
-                const img = document.getElementById(`img-${user.originalIndex}`);
-                if (img) img.src = DEFAULT_AVATAR;
-            });
-        }
-        
+        } catch (error) {console.error('Batch avatar load error:', error);batch.forEach((user) => {const img = document.getElementById(`img-${user.originalIndex}`);if (img) img.src = DEFAULT_AVATAR;});}
         await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES_MS));
     }
 }
 // ЮЗЕРОВ УКАЗЫВАТЬ ТУТ
 const users = [
-    { id: "7388400234", originalIndex: 0 },
-    { id: "1280794069", originalIndex: 1 },
-    { id: "1351405260", originalIndex: 2 },
-    { id: "1775352085", originalIndex: 3 },
+    { id: "7388400234", originalIndex: 0 },{ id: "1280794069", originalIndex: 1 },
+    { id: "1351405260", originalIndex: 2 },{ id: "1775352085", originalIndex: 3 },
 ];
 
 async function loadItems() {
@@ -99,182 +55,168 @@ async function loadItems() {
     const container = document.getElementById('items-container');
     
     if (!container) {
-        console.error('Container not found');
+        console.log('Container not found');
         return;
     }
-
-    const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=";
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    container.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-light"></div></div>';
+    console.log('Started loading items...');
 
     try {
-        // Получаем данные о предметах
+        console.log('Fetching items data...');
+        const proxyUrl = "https://api.codetabs.com/v1/proxy?quest=";
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => {
+            console.log('Items data request timeout');
+            controller.abort();
+        }, 10000);
+
         const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
             signal: controller.signal
         });
         
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        clearTimeout(timeoutId);
         
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new TypeError("Expected JSON but got " + contentType);
+        if (!response.ok) {
+            console.log('Response not OK:', response.status);
+            return;
         }
         
         const data = await response.json();
+        console.log('Received items data:', data);
+        
+        if (!data.data || data.data.length === 0) {
+            console.log('No data in response');
+            return;
+        }
 
-        if (data.data && data.data.length > 0) {
-            container.innerHTML = '';
+        const assetItems = data.data.filter(item => 
+            item.itemType === "Asset" && [8, 11, 12, 17, 18, 27, 28, 29, 30, 31, 41, 42, 43].includes(item.assetType)
+        );
+        
+        if (assetItems.length === 0) {
+            console.log('No asset items found');
+            return;
+        }
+        console.log('Found', assetItems.length, 'asset items');
+        container.innerHTML = '';
+        assetItems.forEach(item => {
+            const col = document.createElement('div');
+            col.className = 'col-md-2 mb-2';
+            col.id = `item-${item.id}`;
+            col.innerHTML = `
+                <div class="card shadow-sm h-100 text-center">
+                    <div class="card-img-top" style="height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${item.name}</h5>
+                        <p class="text-center">
+                            <a href="https://www.roblox.com/catalog/${item.id}" target="_blank">Buy</a>
+                        </p>
+                    </div>
+                </div>
+            `;
+            container.appendChild(col);
+        });
+
+        const BATCH_SIZE = 3;
+        const DELAY_BETWEEN_BATCHES_MS = 300;
+
+        console.log('Starting image loading in batches...');
+        
+        for (let i = 0; i < assetItems.length; i += BATCH_SIZE) {
+            const batch = assetItems.slice(i, i + BATCH_SIZE);
+            const itemIds = batch.map(item => item.id).join(',');
             
-            // Фильтруем только ассеты (одежду)
-            const assetItems = data.data.filter(item => 
-                item.itemType === "Asset" && 
-                [8, 11, 12, 17, 18, 27, 28, 29, 30, 31, 41, 42, 43].includes(item.assetType)
-            );
-
-            if (assetItems.length > 0) {
-                // Создаем карточки с плейсхолдерами
-                assetItems.forEach(item => {
-                    const col = document.createElement('div');
-                    col.className = 'col-md-4 mb-4';
-                    col.id = `item-${item.id}`;
-                    col.innerHTML = `
-                        <div class="card shadow-sm h-100 text-center">
-                            <div class="card-img-top" style="height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">${item.name}</h5>
-                                <p class="card-text small">Type: ${getAssetTypeName(item.assetType)}</p>
-                                <p class="text-center">
-                                    <a href="https://www.roblox.com/catalog/${item.id}" target="_blank" class="btn btn-primary btn-sm">View Item</a>
-                                </p>
-                            </div>
-                        </div>
-                    `;
-                    container.appendChild(col);
-                });
-
-                // Загружаем изображения для каждого предмета
-                const imagePromises = assetItems.map(async (item) => {
+            console.log('Processing batch:', batch.map(item => item.id));
+            
+            try {
+                const imageUrls = [
+                    `https://thumbnails.roblox.com/v1/assets?assetIds=${itemIds}&size=420x420&format=Png`,
+                    `https://thumbnails.roblox.com/v1/assets?assetIds=${itemIds}&size=150x150&format=Png`,
+                    `https://thumbnails.roblox.com/v1/assets?assetIds=${itemIds}&size=100x100&format=Png`
+                ];
+                let imagesData = null;
+                let success = false;
+                for (const url of imageUrls) {
                     try {
-                        // Пробуем несколько вариантов получения изображения
-                        const urlsToTry = [
-                            `https://thumbnails.roblox.com/v1/assets?assetIds=${item.id}&size=420x420&format=Png`,
-                            `https://thumbnails.roblox.com/v1/assets?assetIds=${item.id}&size=150x150&format=Png`,
-                            `https://www.roblox.com/asset-thumbnail/image?assetId=${item.id}&width=420&height=420&format=Png`
-                        ];
-
-                        let imageUrl = null;
+                        console.log('Trying image URL:', url);
                         
-                        for (const url of urlsToTry) {
-                            try {
-                                const imageResponse = await fetch(proxyUrl + encodeURIComponent(url));
-                                if (imageResponse.ok) {
-                                    const imageData = await imageResponse.json();
-                                    if (imageData.data && imageData.data.length > 0 && imageData.data[0].imageUrl) {
-                                        imageUrl = imageData.data[0].imageUrl;
-                                        break;
-                                    }
-                                }
-                            } catch (e) {
-                                continue;
-                            }
-                        }
+                        const imageController = new AbortController();
+                        const imageTimeout = setTimeout(() => {
+                            console.log('Image request timeout for URL:', url);
+                            imageController.abort();
+                        }, 5000);
 
-                        const itemElement = document.getElementById(`item-${item.id}`);
-                        if (itemElement) {
-                            const imgElement = itemElement.querySelector('.card-img-top');
-                            if (imgElement) {
-                                imgElement.innerHTML = '';
-                                imgElement.style.background = 'none';
-                                
-                                if (imageUrl) {
-                                    const img = document.createElement('img');
-                                    img.src = imageUrl;
-                                    img.alt = item.name;
-                                    img.className = 'w-100 h-100';
-                                    img.style.objectFit = 'cover';
-                                    img.onerror = () => {
-                                        // Если изображение не загружается, показываем плейсхолдер
-                                        showImagePlaceholder(imgElement, item.name);
-                                    };
-                                    imgElement.appendChild(img);
-                                } else {
-                                    // Если изображение не найдено, показываем плейсхолдер
-                                    showImagePlaceholder(imgElement, item.name);
-                                }
+                        const imageResponse = await fetch(proxyUrl + encodeURIComponent(url), {
+                            signal: imageController.signal
+                        });
+                        
+                        clearTimeout(imageTimeout);
+
+                        if (imageResponse.ok) {
+                            imagesData = await imageResponse.json();
+                            console.log('Image data received:', imagesData);
+                            
+                            if (imagesData && imagesData.data && imagesData.data.length > 0) {
+                                success = true;
+                                console.log('Image batch successful');
+                                break;
                             }
                         }
-                    } catch (error) {
-                        console.error(`Error loading image for item ${item.id}:`, error);
-                        const itemElement = document.getElementById(`item-${item.id}`);
-                        if (itemElement) {
-                            const imgElement = itemElement.querySelector('.card-img-top');
-                            if (imgElement) {
-                                showImagePlaceholder(imgElement, item.name);
-                            }
-                        }
+                    } catch (imageError) {
+                        console.log('Image request failed for URL:', url, imageError);
+                        continue;
                     }
-                });
+                }
 
-                await Promise.allSettled(imagePromises);
+                if (success && imagesData) {
+                    batch.forEach(item => {
+                        const imgElement = document.querySelector(`#item-${item.id} .card-img-top`);
+                        if (!imgElement) return;
 
-            } else {
-                container.innerHTML = '<p class="text-center">No clothing items found.</p>';
+                        const itemImage = imagesData.data.find(img => img.targetId === item.id);
+                        if (itemImage && itemImage.imageUrl) {
+                            console.log('Setting image for item:', item.id);
+                            imgElement.innerHTML = `<img src="${itemImage.imageUrl}" alt="${item.name}" class="w-100 h-100" style="object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\\'w-100 h-100 d-flex flex-column align-items-center justify-content-center\\' style=\\'background: #e9ecef;\\'><i class=\\'fas fa-image fa-3x text-muted mb-2\\'></i><small class=\\'text-muted\\'>No image</small></div>'">`;
+                        } else {
+                            imgElement.innerHTML = `
+                                <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="background: #e9ecef;">
+                                    <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                                    <small class="text-muted">No image</small>
+                                </div>
+                            `;
+                        }
+                    });
+                } else {
+                    console.log('All image URLs failed for batch');
+                    batch.forEach(item => {
+                        const imgElement = document.querySelector(`#item-${item.id} .card-img-top`);
+                        if (imgElement) {
+                            imgElement.innerHTML = `
+                                <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="background: #e9ecef;">
+                                    <i class="fas fa-image fa-3x text-muted mb-2"></i>
+                                    <small class="text-muted">Load failed</small>
+                                </div>
+                            `;
+                        }
+                    });
+                }
+
+            } catch (batchError) {
+                console.log('Batch processing error:', batchError);
             }
-        } else {
-            container.innerHTML = '<p class="text-center">No items found.</p>';
+            if (i + BATCH_SIZE < assetItems.length) {
+                console.log('Waiting before next batch...');
+                await new Promise(resolve => setTimeout(resolve, DELAY_BETWEEN_BATCHES_MS));
+            }
         }
-        
+
+        console.log('All batches processed');
+
     } catch (error) {
-        if (error.name === 'AbortError') {
-            console.error('Request timed out');
-            container.innerHTML = '<p class="text-center">Request timed out. Please try again.</p>';
-        } else if (error instanceof TypeError) {
-            console.error('Network or JSON error:', error);
-            container.innerHTML = '<p class="text-center">Network error or invalid data.</p>';
-        } else {
-            console.error('Error fetching items:', error);
-            container.innerHTML = '<p class="text-center">Failed to load items.</p>';
-        }
-    } finally {
-        clearTimeout(timeoutId);
-    }
-
-    // Вспомогательная функция для отображения плейсхолдера
-    function showImagePlaceholder(imgElement, itemName) {
-        imgElement.innerHTML = '';
-        imgElement.style.background = 'none';
-        
-        const placeholder = document.createElement('div');
-        placeholder.className = 'w-100 h-100 d-flex flex-column align-items-center justify-content-center';
-        placeholder.style.background = '#e9ecef';
-        
-        const icon = document.createElement('i');
-        icon.className = 'fas fa-image fa-3x text-muted mb-2';
-        
-        const text = document.createElement('small');
-        text.className = 'text-muted text-center';
-        text.textContent = 'No image available';
-        text.style.fontSize = '12px';
-        
-        placeholder.appendChild(icon);
-        placeholder.appendChild(text);
-        imgElement.appendChild(placeholder);
-    }
-
-    // Вспомогательная функция для получения названия типа ассета
-    function getAssetTypeName(assetType) {
-        const assetTypes = {
-            8: 'Hat', 11: 'Shirt', 12: 'Pants', 17: 'Head', 18: 'Face',
-            27: 'Torso', 28: 'Right Arm', 29: 'Left Arm', 30: 'Left Leg',
-            31: 'Right Leg', 41: 'Hair', 42: 'Glasses', 43: 'Accessory'
-        };
-        return assetTypes[assetType] || `Unknown (${assetType})`;
+        console.log('Global loading error:', error);
     }
 }
 
@@ -290,12 +232,12 @@ function showSection(id) {
     sections.forEach(section => {section.classList.remove('active');});
     const targetSection = document.getElementById(id);
     if (targetSection) {targetSection.classList.add('active');}
-    if (id === 'shop') {observeCards();loadItems();}
-    if (id === 'team') {observeCards();loadRobloxAvatars(users);}
+    if (id === 'shop') {loadItems().then(() => {observeCards();});}
+    if (id === 'team') {loadRobloxAvatars(users).then(() => {observeCards();});}
 }
 
 window.addEventListener("load", function () {const loader = document.getElementById("loader");loader.style.display = "none";});
-function observeCards() {
+/*function observeCards() {
       const cards = document.querySelectorAll("#shop .card");
       const cards2 = document.querySelectorAll("#team .card");
       const observerOptions = {root: null,rootMargin: "0px",threshold: 0.1};
@@ -310,4 +252,17 @@ function observeCards() {
       }, observerOptions);
       cards.forEach(card => {observer.observe(card);});
       cards2.forEach(card => {observer.observe(card);});
+}*/
+
+function observeCards() {
+    const cards = document.querySelectorAll("#shop .card, #team .card");
+    const observerOptions = {root: null, rootMargin: "0px", threshold: 0.1};
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {entry.target.classList.add("visible");
+            } else {entry.target.classList.remove("visible");}
+        });
+    }, observerOptions);
+    cards.forEach(card => {observer.observe(card);});
+    console.log(`Observing ${cards.length} cards`);
 }
