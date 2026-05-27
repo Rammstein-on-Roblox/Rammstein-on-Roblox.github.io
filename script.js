@@ -133,7 +133,7 @@ function loadItems() {
                 <div class="card shadow-sm h-100 text-center visible">
                     <div class="card-img-top" style="height: 220px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px 8px 0 0;">
                         <img id="thumb-${item.id}" 
-                             src="img/logo.jpg" 
+                             src="img/roblox-150.png" 
                              alt="${item.name}" 
                              class="w-100 h-100" 
                              style="object-fit: contain; padding: 20px;">
