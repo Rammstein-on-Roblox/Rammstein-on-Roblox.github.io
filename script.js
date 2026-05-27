@@ -1,5 +1,3 @@
-// ====================== SCRIPT.JS ======================
-
 window.addEventListener('load', () => {
     const loader = document.getElementById('loader');
     if (loader) loader.style.display = 'none';
@@ -7,7 +5,7 @@ window.addEventListener('load', () => {
     const aboutText = "Rammstein formed in Berlin in 1994, they quickly became a global force in industrial metal. Known for their powerful music and theatrical, pyrotechnic-filled live shows, their concerts have become the stuff of legend, cementing their status as one of the world's most unique and celebrated bands.";
     const aboutText2 = "Welcome to our tribute, Rammstein on Roblox! We've meticulously recreated their iconic live stage in a perfect 1:1 scale. The stage is set within a massive, highly-detailed stadium, capturing the incredible energy and scale of a real Rammstein performance. Every element has been crafted to make you feel like you're truly there.";
 
-    const speedFactor = 0.25;
+    const speedFactor = 1.75;
     const aboutTextContainer = document.getElementById('aboutText');
     if (aboutTextContainer) {
         aboutText.split('').forEach((char, index) => {
@@ -29,11 +27,26 @@ window.addEventListener('load', () => {
         });
     }
 
-    // Автозагрузка магазина, если открыли сразу Shop
+    // Auto-load the shop if it's the active section on page open
     if (document.getElementById('shop').classList.contains('active')) {
         loadItems();
     }
+    setTimeout(() => {
+        observeCards();
+    }, 800);
 });
+
+function observeCards() {
+    const cards = document.querySelectorAll("#team .card, #shop .card");
+    
+    console.log(`observeCards: found ${cards.length} cards`);
+
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.classList.add("visible");
+        }, 80 + index * 60);
+    });
+}
 
 function showSection(id) {
     const sections = document.querySelectorAll('.section-content');
@@ -54,93 +67,135 @@ function showSection(id) {
         loader.style.display = 'none';
     }, 300);
 
-    if (id === 'shop') {
-        setTimeout(() => {
+    setTimeout(() => {
+        if (id === 'shop') {
             loadItems();
-        }, 100);
-    }
+        }
+        observeCards();
+    }, 200);
 }
 
 function loadItems() {
     const container = document.getElementById('items-container');
     if (!container) {
-        console.error("❌ Контейнер #items-container не найден!");
+        console.error("❌ Container items-container not found!");
         return;
     }
 
     container.innerHTML = '';
 
-    const groupItems = [
-        { id: 137673005066054, name: "Sonne Tour Shirt" },
-        { id: 100485447459701, name: "Rammstein Hoodie" },
-        { id: 74405350693577, name: "Stage Crew Pass" },
-        { id: 131895338186507, name: "Ausländer Uniform" }
-    ];
+    const groupId = 35005739;
+    
+    // Оставляем cache buster, но убираем сложные заголовки, чтобы избежать OPTIONS-запроса
+    const cacheBuster = new Date().getTime();
+    const apiUrl = `https://catalog.roproxy.com/v1/search/items/details?Category=3&CreatorType=Group&CreatorTargetId=${groupId}&Limit=30&cb=${cacheBuster}`;
 
-    groupItems.forEach((item) => {
-        const col = document.createElement('div');
-        col.className = 'col-md-3 mb-4';
+    fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+            // Стандартный заголовок, который НЕ вызывает CORS Preflight проверку
+            "Accept-Language": "en-US,en;q=0.9"
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+    })
+    .then(data => {
+        if (!data.data || !Array.isArray(data.data)) {
+            throw new Error("Invalid API response");
+        }
 
-        col.innerHTML = `
-            <div class="card shadow-sm h-100 text-center">
-                <div class="card-img-top" style="height: 220px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px 8px 0 0;">
-                    <img id="thumb-${item.id}" 
-                         src="img/logo.jpg" 
-                         alt="${item.name}" 
-                         class="w-100 h-100" 
-                         style="object-fit: contain; padding: 20px;">
+        const items = data.data.map(item => {
+            let finalName = item.originalName || item.name || "Unknown Item";
+
+            // ФИЛЬТР АВТОПЕРЕВОДА: Если RoProxy всё же подсунул русский хвостик,
+            // мы просто срезаем самые частые приписки автоперевода Roblox.
+            finalName = finalName
+                .replace(/\s*-\s*(Рубашка|Штаны|Футболка|Одежда)/gi, '')
+                .replace(/\[\s*(Рубашка|Штаны|Футболка)\s*\]/gi, '')
+                .trim();
+
+            return {
+                id: item.id,
+                name: finalName
+            };
+        });
+
+        console.log("✅ Items loaded:", items.length);
+
+        // Рендерим карточки
+        items.forEach(item => {
+            const col = document.createElement('div');
+            col.className = 'col-md-3 mb-4';
+
+            col.innerHTML = `
+                <div class="card shadow-sm h-100 text-center visible">
+                    <div class="card-img-top" style="height: 220px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px 8px 0 0;">
+                        <img id="thumb-${item.id}" 
+                             src="img/logo.jpg" 
+                             alt="${item.name}" 
+                             class="w-100 h-100" 
+                             style="object-fit: contain; padding: 20px;">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title" id="title-${item.id}">${item.name}</h5>
+                        <a href="https://www.roblox.com/catalog/${item.id}" 
+                           target="_blank" 
+                           class="btn btn-outline-light btn-sm w-100 mt-2">
+                           Buy on Roblox
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <h5 class="card-title">${item.name}</h5>
-                    <a href="https://www.roblox.com/catalog/${item.id}" 
-                       target="_blank" 
-                       class="btn btn-outline-light btn-sm w-100 mt-2">Buy on Roblox</a>
-                </div>
-            </div>
-        `;
+            `;
+            container.appendChild(col);
+        });
 
-        container.appendChild(col);
-    });
-
-    console.log("✅ Карточки магазина успешно добавлены");
-
-    // Загружаем превью
-    groupItems.forEach(item => {
-        loadItemThumbnail(item.id);
+        items.forEach(item => loadItemThumbnail(item.id));
+    })
+    .catch(err => {
+        console.error("❌ Failed to load group items:", err);
     });
 }
 
-async function loadItemThumbnail(itemId) {
+function loadItemThumbnail(itemId) {
     const img = document.getElementById(`thumb-${itemId}`);
     if (!img) return;
 
-    // Основной метод
-    try {
-        const response = await fetch(
-            `https://thumbnails.roblox.com/v1/assets?assetIds=${itemId}&size=420x420&format=Png`
-        );
-        const data = await response.json();
+    const apiUrl =
+        `https://thumbnails.roproxy.com/v1/assets?assetIds=${itemId}&size=512x512&format=Png&isCircular=false`;
 
-        if (data.data?.[0]?.imageUrl) {
-            img.src = data.data[0].imageUrl;
-            console.log(`✅ Превью загружено: ${itemId}`);
-            return;
-        }
-    } catch (e) {
-        console.log(`Новый API не сработал для ${itemId}, пробуем fallback...`);
-    }
+    fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
 
-    // Fallback (надёжный)
-    try {
-        const fallbackUrl = `https://www.roblox.com/asset-thumbnail/image?assetId=${itemId}&width=420&height=420&format=png`;
-        img.src = fallbackUrl;
-        console.log(`✅ Fallback превью использован: ${itemId}`);
-    } catch (e) {
-        console.warn(`Не удалось загрузить превью для ${itemId}`);
-    }
+            if (
+                data.data &&
+                data.data[0] &&
+                data.data[0].imageUrl
+            ) {
+
+                img.src = data.data[0].imageUrl;
+
+                console.log(`✅ Thumbnail loaded: ${itemId}`);
+
+            } else {
+
+                throw new Error("No image");
+
+            }
+
+        })
+        .catch(err => {
+
+            console.warn(`Failed to load thumbnail: ${itemId}`, err);
+
+            img.src = "img/logo.jpg";
+
+        });
 }
 
-// Остальные функции (галерея, мобильное меню и т.д.)
+// Other functions
 function openPhotoModal(cardElement) {
     const img = cardElement.querySelector('.gallery-img');
     const modal = document.getElementById('photoModal');
