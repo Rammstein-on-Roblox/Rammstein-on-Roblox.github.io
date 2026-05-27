@@ -1,41 +1,364 @@
-@font-face{font-family:"Rodchenko Grotesk ML";src:url('fonts/RodchenkoGroteskML.ttf') format('truetype');}
-@font-face{font-family:"Rodchenko-Bold";src:url('fonts/Rodchenko-Bold.ttf') format('truetype');font-weight:bold;}
-@font-face{font-family:"Rodchenko";src:url('fonts/RodchenkoCTT.ttf') format('truetype');}
-@font-face{font-family:"RAMMSTEIN";src:url('fonts/RAMMSTEINFont.ttf') format('truetype');}
-
-*{cursor:url(img/ArrowCursor.png) 40 40, auto !important;}
-html,body {
-      height:100%;margin:0;
-      font-family:'Rodchenko-Bold',sans-serif;
-      background-image:url('img/bg.jpg');
-      background-repeat:repeat;background-size:auto;background-position:top left;background-attachment:fixed;
+@font-face {
+    font-family: "Rodchenko Grotesk ML";
+    src: url('fonts/RodchenkoGroteskML.ttf') format('truetype');
 }
-body{display:flex;flex-direction:column;}
-main{flex:1;}
-a{text-decoration:none;}
-a:hover{text-decoration:underline;}
-.section-content{display:none;opacity:0;transition:opacity 0.2s linear;}
-.section-content.active{display:block;opacity: 1;}
+@font-face {
+    font-family: "Rodchenko-Bold";
+    src: url('fonts/Rodchenko-Bold.ttf') format('truetype');
+    font-weight: bold;
+}
+@font-face {
+    font-family: "Rodchenko";
+    src: url('fonts/RodchenkoCTT.ttf') format('truetype');
+}
+@font-face {
+    font-family: "RAMMSTEIN";
+    src: url('fonts/RAMMSTEINFont.ttf') format('truetype');
+}
 
-#about,#team,#social_media,#shop{color:#ffffff;}
-#about h2,#team h2,#contact h2,#shop h2{font-size:2.75rem;background-color:transparent;}
-#about p,#contact p,#shop p{font-size:1.2rem;background-color:transparent;}
+* {
+    cursor: url(img/ArrowCursor.png) 40 40, auto !important;
+}
 
-.nav-link{position:relative;overflow:hidden;font-size:1.2rem;}
-.nav-link::after{content:'';position:absolute;bottom:0;left:50%;width:0;height:2px;background-color:#fff;transition:all 0.2s linear;transform:translateX(-50%);}
-.nav-link:hover::after{width:100%;}
-.nav-link:hover{color:#000;}
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Rodchenko-Bold', sans-serif;
+    background-image: url('img/bg.jpg');
+    background-repeat: repeat;
+    background-size: auto;
+    background-position: top left;
+    background-attachment: fixed;
+}
 
-#team,#team .card,#team .card-body{color:rgb(255, 255, 255);background-color:transparent !important;background-image:none !important;}
-#team{border-radius: 10px;}
+body {
+    display: flex;
+    flex-direction: column;
+}
 
-#shop,#shop .card,#shop .card-body{color:rgb(255,255,255);background-color:transparent !important;background-image:none !important;}
-#shop{border-radius:10px;}
+main {
+    flex: 1;
+}
 
-#loader{position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10000;}
-.fade-in{opacity: 0;animation:fadeInEffect 0.3s forwards;}
-@keyframes fadeInEffect {to {opacity: 1;}}
-.fade-in span{opacity:0;animation:fadeInEffect 0.035s forwards;animation-delay:calc(0.005s * var(--i));}
-.text-container{margin-top:20px;}
-.card{opacity:0;transform:translateY(50px);transition:opacity 0.6s ease-out,transform 0.6s ease-out;}
-.card.visible{opacity:1;transform:translateY(0);}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.section-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+}
+.section-content.active {
+    display: block;
+    opacity: 1;
+}
+
+#about, #team, #social_media, #shop {
+    color: #ffffff;
+}
+#about h2, #team h2, #contact h2, #shop h2 {
+    font-size: 2.75rem;
+    background-color: transparent;
+}
+#about p, #contact p, #shop p {
+    font-size: 2rem;
+    background-color: transparent;
+}
+
+.header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+/* Стили шапки */
+.custom-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: transparent;
+}
+
+.brand-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.desktop-logo {
+    font-family: 'RAMMSTEIN', sans-serif; 
+    font-size: 64px; 
+    margin: 0;
+    text-transform: uppercase; 
+    letter-spacing: 2px;
+    color: #fff;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.desktop-nav-container {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    padding-left: 5px;
+}
+
+.pc-nav-link {
+    position: relative;
+    overflow: hidden;
+    font-size: 1.2rem;
+    background: none; 
+    border: none; 
+    font-family: inherit;
+    color: #fff;
+    padding: 0 0 4px 0;
+    cursor: pointer;
+}
+.pc-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: #fff;
+    transition: all 0.2s linear;
+    transform: translateX(-50%);
+}
+.pc-nav-link:hover::after {
+    width: 100%;
+}
+.pc-nav-link:hover {
+    color: #b1b1b1;
+}
+
+.mobile-logo-wrapper {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+
+.mobile-logo-btn {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    object-fit: contain;
+    display: inline-block;
+}
+
+#team, #team .card, #team .card-body {
+    color: rgb(255,255,255);
+    background-color: transparent !important;
+    background-image: none !important;
+}
+#team {
+    border-radius: 10px;
+}
+
+#shop, #shop .card, #shop .card-body {
+    color: rgb(255,255,255);
+    background-color: transparent !important;
+    background-image: none !important;
+}
+#shop {
+    border-radius: 10px;
+}
+
+#loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.fade-in {
+    opacity: 0;
+    animation: fadeInEffect 0.3s forwards;
+}
+@keyframes fadeInEffect {
+    to { opacity: 1; }
+}
+
+.fade-in span {
+    opacity: 0;
+    animation: fadeInEffect 0.035s forwards;
+    animation-delay: calc(0.005s * var(--i));
+}
+
+.text-container {
+    margin-top: 20px;
+}
+
+.card {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.ror-btn {
+    font-family: 'Rodchenko', sans-serif !important;
+    font-size: 24px !important;
+    letter-spacing: 1px;
+    text-align: left;
+    text-decoration: none !important;
+    padding: 0 !important;
+    margin-bottom: 8px;
+}
+
+/* Стили для фотогалереи (Секция Team) */
+.photo-card {
+    overflow: hidden;
+    background: transparent !important;
+    border: none !important;
+    cursor: pointer;
+}
+
+.gallery-img {
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    object-fit: cover;
+    height: 250px;
+    width: 100%;
+}
+
+.photo-card:hover .gallery-img {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
+}
+
+.photo-modal {
+    display: none;
+    position: fixed;
+    z-index: 20000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.photo-modal.show {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content-wrapper {
+    max-width: 800px;
+    width: 90%;
+    text-align: center;
+    background: rgba(20, 20, 20, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-img-content {
+    max-width: 100%;
+    max-height: 70vh;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.modal-caption {
+    margin-top: 15px;
+    color: #fff;
+    font-family: 'Rodchenko-Bold', sans-serif;
+    font-size: 1.4rem;
+    text-align: left;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 10px;
+}
+
+.modal-caption p {
+    margin: 5px 0;
+    background: transparent !important;
+}
+
+.close-modal {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.close-modal:hover {
+    color: #b1b1b1;
+}
+
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    left: -250px;
+    width: 250px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+    transition: left 0.3s ease;
+    z-index: 9999;
+    padding-top: 100px;
+}
+
+.mobile-sidebar.open {
+    left: 0;
+}
+
+.mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-left: 30px;
+}
+
+.mobile-nav-link {
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: 'Rodchenko-Bold', sans-serif;
+    font-size: 1.8rem;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none !important;
+}
+.mobile-nav-link:hover {
+    color: #b1b1b1;
+    text-decoration: none !important;
+}
+
+@media (max-width: 991.98px) {
+    .custom-header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .brand-block {
+        display: none !important;
+    }
+    
+    .mobile-logo-wrapper {
+        display: block !important;
+        z-index: 10000;
+    }
+}
