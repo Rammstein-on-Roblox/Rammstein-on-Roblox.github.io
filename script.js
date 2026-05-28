@@ -328,6 +328,15 @@ function initAboutVideo() {
     var muteBtn = document.getElementById("aboutVideoMuteBtn");
     var volumeSlider = document.getElementById("aboutVideoVolumeSlider");
     if (!video) return;
+
+    video.addEventListener('pause', function() {
+        video.classList.add('video-hidden');
+    });
+    
+    video.addEventListener('play', function() {
+        video.classList.remove('video-hidden');
+    });
+
     video.src = "img/trailer.mp4";
     video.load();
     video.muted = true;

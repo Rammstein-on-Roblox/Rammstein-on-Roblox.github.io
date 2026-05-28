@@ -122,6 +122,17 @@ main {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
+    transition: opacity 0.5s ease !important;
+}
+
+.about-video-container video.video-hidden {
+    opacity: 0 !important;
+}
+
+.about-video-container video.video-hidden ~ .video-controls-overlay {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }
 
 .mobile-sidebar {
