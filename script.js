@@ -36,11 +36,27 @@ window.addEventListener('load', () => {
 
     const aboutVideo = document.getElementById("aboutVideo");
     if (aboutVideo) {
-        aboutVideo.addEventListener('canplaythrough', function() {
+        aboutVideo.muted = true;
+        aboutVideo.setAttribute('playsinline', '');
+        
+        const playVideo = () => {
             aboutVideo.play().catch(function(error) {
                 console.log("About video autoplay blocked:", error);
+                
+                const forcePlay = () => {
+                    aboutVideo.play().then(() => {
+                        document.removeEventListener('click', forcePlay);
+                        document.removeEventListener('touchstart', forcePlay);
+                    }).catch(function(err) {
+                        console.log("Force play failed:", err);
+                    });
+                };
+                document.addEventListener('click', forcePlay);
+                document.addEventListener('touchstart', forcePlay);
             });
-        }, { once: true });
+        };
+
+        aboutVideo.addEventListener('canplaythrough', playVideo, { once: true });
     }
 
     initAboutVideo();
