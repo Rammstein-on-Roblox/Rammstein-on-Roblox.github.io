@@ -34,6 +34,15 @@ window.addEventListener('load', () => {
         observeCards();
     }, 800);
 
+    const aboutVideo = document.getElementById("aboutVideo");
+    if (aboutVideo) {
+        aboutVideo.addEventListener('canplaythrough', function() {
+            aboutVideo.play().catch(function(error) {
+                console.log("About video autoplay blocked:", error);
+            });
+        }, { once: true });
+    }
+
     initAboutVideo();
 });
 
@@ -255,9 +264,11 @@ function toggleMobileMenu() {
             muteBtn.style.color = "#ae1d1d";
             muteBtn.style.borderColor = "#ae1d1d";
         }
-        video.play().catch(function(error) {
-            console.log("Autoplay blocked:", error);
-        });
+        video.addEventListener('canplaythrough', function() {
+            video.play().catch(function(error) {
+                console.log("Autoplay blocked:", error);
+            });
+        }, { once: true });
         resetControlsTimer();
     } else {
         video.pause();
