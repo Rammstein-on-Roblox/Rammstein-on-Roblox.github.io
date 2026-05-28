@@ -52,8 +52,7 @@
   </div>
 
   <main class="container my-5">
-    <section id="about" class="section-content active">
-      <h2 class="text-center mb-1">About Us</h2>
+    <section id="about" class="section-content active" style="font-family: 'GT-America-Mono-Regular', sans-serif">
       <p class="text-center">
         <span id="aboutText" class="fade-in"></span>
       </p>
@@ -63,45 +62,95 @@
     </section>
 
     <section id="team" class="section-content">
-      <div class="row justify-content-center">
-        <h2 class="text-center mb-4">Gallery</h2>
+      <div class="row justify-content-center" style="font-family: 'GT-America-Mono-Regular', sans-serif;">
         
         <div class="col-md-3 mb-4">
-          <div class="card shadow-sm photo-card" onclick="openPhotoModal(this)">
-            <img src="img/Sonne Chorus After Intro.png" class="card-img-top gallery-img" alt="Sonne Chorus After Intro" 
-                 data-info-where="Berlin, Olympiastadion" 
-                 data-info-when="XX XX 2026">
+          <div class="card gallery-card visible" onclick="openPhotoModal(this)">
+            <div class="gallery-img-container">
+              <img src="img/Sonne Chorus After Intro.png" class="gallery-img" alt="Sonne Chorus After Intro" 
+                   data-info-where="Berlin, Olympiastadion" 
+                   data-info-when="2026"
+                   data-info-by="danchik3421">
+              <div class="gallery-overlay">
+                <span class="view-btn">VIEW PHOTO</span>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <div class="gallery-title">Sonne Chorus After Intro</div>
+              <div class="gallery-meta">
+                <span>BY: <span class="meta-author">danchik3421</span></span>
+                <span>2026</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="col-md-3 mb-4">
-          <div class="card shadow-sm photo-card" onclick="openPhotoModal(this)">
-            <img src="img/Sonne Drop.png" class="card-img-top gallery-img" alt="Sonne Drop" 
-                 data-info-where="Berlin, Olympiastadion" 
-                 data-info-when="XX XX 2026">
+          <div class="card gallery-card visible" onclick="openPhotoModal(this)">
+            <div class="gallery-img-container">
+              <img src="img/Sonne Drop.png" class="gallery-img" alt="Sonne Drop" 
+                   data-info-where="Berlin, Olympiastadion" 
+                   data-info-when="2026"
+                   data-info-by="danchik3421">
+              <div class="gallery-overlay">
+                <span class="view-btn">VIEW PHOTO</span>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <div class="gallery-title">Sonne Drop</div>
+              <div class="gallery-meta">
+                <span>BY: <span class="meta-author">danchik3421</span></span>
+                <span>2026</span>
+              </div>
+            </div>
           </div>
         </div>
         
         <div class="col-md-3 mb-4">
-          <div class="card shadow-sm photo-card" onclick="openPhotoModal(this)">
-            <img src="img/Sonne Ending.png" class="card-img-top gallery-img" alt="Sonne Ending" 
-                 data-info-where="Berlin, Olympiastadion" 
-                 data-info-when="XX XX 2026">
+          <div class="card gallery-card visible" onclick="openPhotoModal(this)">
+            <div class="gallery-img-container">
+              <img src="img/Sonne Ending.png" class="gallery-img" alt="Sonne Ending" 
+                   data-info-where="Berlin, Olympiastadion" 
+                   data-info-when="2026"
+                   data-info-by="danchik3421">
+              <div class="gallery-overlay">
+                <span class="view-btn">VIEW PHOTO</span>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <div class="gallery-title">Sonne Ending</div>
+              <div class="gallery-meta">
+                <span>BY: <span class="meta-author">danchik3421</span></span>
+                <span>2026</span>
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="col-md-3 mb-4">
-          <div class="card shadow-sm photo-card" onclick="openPhotoModal(this)">
-            <img src="img/Sonne Verse 2.png" class="card-img-top gallery-img" alt="Sonne Verse 2" 
-                 data-info-where="Berlin, Olympiastadion" 
-                 data-info-when="XX XX 2026">
+          <div class="card gallery-card visible" onclick="openPhotoModal(this)">
+            <div class="gallery-img-container">
+              <img src="img/Sonne Verse 2.png" class="gallery-img" alt="Sonne Verse 2" 
+                   data-info-where="Berlin, Olympiastadion" 
+                   data-info-when="2026"
+                   data-info-by="danchik3421">
+              <div class="gallery-overlay">
+                <span class="view-btn">VIEW PHOTO</span>
+              </div>
+            </div>
+            <div class="gallery-info">
+              <div class="gallery-title">Sonne Verse 2</div>
+              <div class="gallery-meta">
+                <span>BY: <span class="meta-author">danchik3421</span></span>
+                <span>2026</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <section id="social_media" class="section-content">
-      <h2 class="text-center mb-4">Social Media</h2>
       <div class="text-center">
         <div style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;">
           <img src="img/roblox-50.png" alt="Roblox" style="width: 24px; height: 24px; object-fit: contain;">
@@ -115,22 +164,28 @@
     </section>
     
     <section id="shop" class="section-content">
-      <h2 class="text-center mb-4">Apparel</h2>
-      <div id="items-container" class="row justify-content-center"></div>
+      <div class="shop-layout">
+        <div class="shop-sidebar">
+          <div class="sidebar-label">APPAREL</div>
+          <div class="sidebar-dash"></div>
+        </div>
+        <div id="items-container" class="row w-100 m-0"></div>
+      </div>
     </section>
   </main>
 
-  <footer class="text-white text-center py-3" style="background-color: rgba(0, 0, 0, 0);">
-    <p class="mb-0">&copy; 2025 Rammstein On Roblox. All Rights Reserved.</p>
+  <footer class="text-white text-center py-3" style="background-color: rgba(0, 0, 0, 0); font-family: 'GT-America-Mono-Regular', sans-serif;">
+    <p class="mb-0">Copyright &copy;2025-2026 Rammstein On Roblox. All Rights Reserved.</p>
   </footer>
 
   <div id="photoModal" class="photo-modal" onclick="closePhotoModal()">
     <span class="close-modal">&times;</span>
     <div class="modal-content-wrapper" onclick="event.stopPropagation()">
       <img id="modalImg" class="modal-img-content" src="" alt="">
-      <div id="modalCaption" class="modal-caption">
-        <p><strong>Where:</strong> <span id="infoWhere"></span></p>
-        <p><strong>When:</strong> <span id="infoWhen"></span></p>
+      <div id="modalCaption" class="modal-caption" style="font-family: 'GT-America-Mono-Regular', monospace; font-size: 14px;">
+        <p>LOCATION: <span id="infoWhere" style="color: #fff;"></span></p>
+        <p>DATE: <span id="infoWhen" style="color: #fff;"></span></p>
+        <p>CREDITS: <span id="infoBy" style="color: #ffffff; font-weight: bold;"></span></p>
       </div>
     </div>
   </div>

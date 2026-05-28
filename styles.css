@@ -12,8 +12,20 @@
     src: url('fonts/RodchenkoCTT.ttf') format('truetype');
 }
 @font-face {
+    font-family: "Rodchenko-Cond";
+    src: url('fonts/Rodchenko-Cond.otf') format('truetype');
+}
+@font-face {
     font-family: "RAMMSTEIN";
     src: url('fonts/RAMMSTEINFont.ttf') format('truetype');
+}
+@font-face {
+    font-family: "GT-America-Regular";
+    src: url('fonts/GT-America-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: "GT-America-Mono-Regular";
+    src: url('fonts/GT-America-Mono-Regular.ttf') format('truetype');
 }
 
 * {
@@ -23,7 +35,7 @@
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Rodchenko-Bold', sans-serif;
+    font-family: 'Rodchenko-Cond', sans-serif;
     background-image: url('img/bg.jpg');
     background-repeat: repeat;
     background-size: auto;
@@ -61,11 +73,11 @@ a:hover {
     color: #ffffff;
 }
 #about h2, #team h2, #contact h2, #shop h2 {
-    font-size: 2.75rem;
+    font-size: 1rem;
     background-color: transparent;
 }
 #about p, #contact p, #shop p {
-    font-size: 2rem;
+    font-size: 1rem;
     background-color: transparent;
 }
 
@@ -76,7 +88,6 @@ a:hover {
     padding: 20px 15px;
 }
 
-/* Стили шапки */
 .custom-header {
     display: flex;
     align-items: flex-start;
@@ -111,7 +122,7 @@ a:hover {
 .pc-nav-link {
     position: relative;
     overflow: hidden;
-    font-size: 1.2rem;
+    font-size: 2rem;
     background: none; 
     border: none; 
     font-family: inherit;
@@ -151,22 +162,187 @@ a:hover {
     display: inline-block;
 }
 
-#team, #team .card, #team .card-body {
-    color: rgb(255,255,255);
-    background-color: transparent !important;
-    background-image: none !important;
-}
 #team {
     border-radius: 10px;
 }
 
-#shop, #shop .card, #shop .card-body {
-    color: rgb(255,255,255);
-    background-color: transparent !important;
-    background-image: none !important;
-}
 #shop {
     border-radius: 10px;
+}
+
+.shop-layout {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    gap: 30px;
+    width: 100%;
+}
+
+.shop-sidebar {
+    position: sticky;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'GT-America-Mono-Regular', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: #fff;
+    padding-top: 10px;
+    user-select: none;
+}
+
+.sidebar-label {
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.sidebar-dash {
+    width: 2px;
+    height: 35px;
+    background-color: #fff;
+    opacity: 0.5;
+}
+
+.store-card {
+    display: flex;
+    flex-direction: column;
+    background: transparent !important;
+    border: none !important;
+    text-align: left;
+}
+
+.store-img-container {
+    background-color: #141414;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    margin-bottom: 15px;
+    transition: transform 0.2s ease;
+}
+
+.store-card:hover .store-img-container {
+    transform: scale(1.02);
+}
+
+.store-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    padding: 20px;
+}
+
+.store-info {
+    font-family: 'GT-America-Mono-Regular', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+
+.store-title {
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.store-price-row {
+    display: flex;
+    gap: 15px;
+}
+
+.price-current {
+    color: #5bb35f;
+}
+
+.gallery-card {
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    cursor: pointer;
+}
+
+.gallery-img-container {
+    position: relative;
+    background-color: #141414;
+    aspect-ratio: 16 / 10; 
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 12px;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.gallery-card:hover .gallery-img {
+    transform: scale(1.05);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-card:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.view-btn {
+    font-family: 'Rodchenko-Cond', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: #fff;
+    border: 1px solid #fff;
+    padding: 8px 18px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.gallery-card:hover .view-btn {
+    background: #fff;
+    color: #000;
+}
+
+.gallery-info {
+    font-family: 'GT-America-Mono-Regular', monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.gallery-title {
+    font-family: 'Rodchenko-Cond', sans-serif;
+    font-size: 19px;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.gallery-meta {
+    display: flex;
+    justify-content: space-between;
+    color: #777;
+}
+
+.meta-author {
+    color: #ffffff; 
+    font-weight: bold;
 }
 
 #loader {
@@ -211,34 +387,13 @@ a:hover {
 }
 
 .ror-btn {
-    font-family: 'Rodchenko', sans-serif !important;
+    font-family: 'Rodchenko-Cond', sans-serif !important;
     font-size: 24px !important;
     letter-spacing: 1px;
     text-align: left;
     text-decoration: none !important;
     padding: 0 !important;
     margin-bottom: 8px;
-}
-
-/* Стили для фотогалереи (Секция Team) */
-.photo-card {
-    overflow: hidden;
-    background: transparent !important;
-    border: none !important;
-    cursor: pointer;
-}
-
-.gallery-img {
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    object-fit: cover;
-    height: 250px;
-    width: 100%;
-}
-
-.photo-card:hover .gallery-img {
-    transform: scale(1.05);
-    box-shadow: 0 10px 20px rgba(255, 255, 255, 0.2);
 }
 
 .photo-modal {
@@ -281,7 +436,7 @@ a:hover {
 .modal-caption {
     margin-top: 15px;
     color: #fff;
-    font-family: 'Rodchenko-Bold', sans-serif;
+    font-family: 'Rodchenko-Cond', sans-serif;
     font-size: 1.4rem;
     text-align: left;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
@@ -335,7 +490,7 @@ a:hover {
     background: none;
     border: none;
     color: #fff;
-    font-family: 'Rodchenko-Bold', sans-serif;
+    font-family: 'Rodchenko-Cond', sans-serif;
     font-size: 1.8rem;
     text-align: left;
     padding: 0;

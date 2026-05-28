@@ -27,7 +27,6 @@ window.addEventListener('load', () => {
         });
     }
 
-    // Auto-load the shop if it's the active section on page open
     if (document.getElementById('shop').classList.contains('active')) {
         loadItems();
     }
@@ -38,9 +37,6 @@ window.addEventListener('load', () => {
 
 function observeCards() {
     const cards = document.querySelectorAll("#team .card, #shop .card");
-    
-    console.log(`observeCards: found ${cards.length} cards`);
-
     cards.forEach((card, index) => {
         setTimeout(() => {
             card.classList.add("visible");
@@ -77,23 +73,17 @@ function showSection(id) {
 
 function loadItems() {
     const container = document.getElementById('items-container');
-    if (!container) {
-        console.error("❌ Container items-container not found!");
-        return;
-    }
+    if (!container) return;
 
     container.innerHTML = '';
 
     const groupId = 35005739;
-    
-    // Оставляем cache buster, но убираем сложные заголовки, чтобы избежать OPTIONS-запроса
     const cacheBuster = new Date().getTime();
     const apiUrl = `https://catalog.roproxy.com/v1/search/items/details?Category=3&CreatorType=Group&CreatorTargetId=${groupId}&Limit=30&cb=${cacheBuster}`;
 
     fetch(apiUrl, {
         method: 'GET',
         headers: {
-            // Стандартный заголовок, который НЕ вызывает CORS Preflight проверку
             "Accept-Language": "en-US,en;q=0.9"
         }
     })
@@ -102,49 +92,46 @@ function loadItems() {
         return res.json();
     })
     .then(data => {
-        if (!data.data || !Array.isArray(data.data)) {
-            throw new Error("Invalid API response");
-        }
+        if (!data.data || !Array.isArray(data.data)) return;
 
         const items = data.data.map(item => {
             let finalName = item.originalName || item.name || "Unknown Item";
-
-            // ФИЛЬТР АВТОПЕРЕВОДА: Если RoProxy всё же подсунул русский хвостик,
-            // мы просто срезаем самые частые приписки автоперевода Roblox.
             finalName = finalName
                 .replace(/\s*-\s*(Рубашка|Штаны|Футболка|Одежда)/gi, '')
                 .replace(/\[\s*(Рубашка|Штаны|Футболка)\s*\]/gi, '')
                 .trim();
 
+            let displayPrice = "Off Sale";
+            if (item.price !== undefined && item.price !== null) {
+                displayPrice = `${item.price} R$`;
+            }
+
             return {
                 id: item.id,
-                name: finalName
+                name: finalName,
+                price: displayPrice
             };
         });
 
-        console.log("✅ Items loaded:", items.length);
-
-        // Рендерим карточки
         items.forEach(item => {
             const col = document.createElement('div');
-            col.className = 'col-md-3 mb-4';
+            col.className = 'col-md-3 mb-5';
 
             col.innerHTML = `
-                <div class="card shadow-sm h-100 text-center visible">
-                    <div class="card-img-top" style="height: 220px; background: rgba(255,255,255,0.06); display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 8px 8px 0 0;">
+                <div class="card store-card visible" 
+                     onclick="window.open('https://www.roblox.com/catalog/${item.id}', '_blank')" 
+                     style="cursor: pointer;">
+                    <div class="store-img-container">
                         <img id="thumb-${item.id}" 
                              src="img/roblox-150.png" 
                              alt="${item.name}" 
-                             class="w-100 h-100" 
-                             style="object-fit: contain; padding: 20px;">
+                             class="store-img">
                     </div>
-                    <div class="card-body">
-                        <h5 class="card-title" id="title-${item.id}">${item.name}</h5>
-                        <a href="https://www.roblox.com/catalog/${item.id}" 
-                           target="_blank" 
-                           class="btn btn-outline-light btn-sm w-100 mt-2">
-                           Buy on Roblox
-                        </a>
+                    <div class="store-info">
+                        <div class="store-title">${item.name.toUpperCase()}</div>
+                        <div class="store-price-row">
+                            <span class="price-current">${item.price}</span>
+                        </div>
                     </div>
                 </div>
             `;
@@ -154,7 +141,7 @@ function loadItems() {
         items.forEach(item => loadItemThumbnail(item.id));
     })
     .catch(err => {
-        console.error("❌ Failed to load group items:", err);
+        console.error(err);
     });
 }
 
@@ -162,52 +149,38 @@ function loadItemThumbnail(itemId) {
     const img = document.getElementById(`thumb-${itemId}`);
     if (!img) return;
 
-    const apiUrl =
-        `https://thumbnails.roproxy.com/v1/assets?assetIds=${itemId}&size=512x512&format=Png&isCircular=false`;
+    const apiUrl = `https://thumbnails.roproxy.com/v1/assets?assetIds=${itemId}&size=512x512&format=Png&isCircular=false`;
 
     fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
-
-            if (
-                data.data &&
-                data.data[0] &&
-                data.data[0].imageUrl
-            ) {
-
+            if (data.data && data.data[0] && data.data[0].imageUrl) {
                 img.src = data.data[0].imageUrl;
-
-                console.log(`✅ Thumbnail loaded: ${itemId}`);
-
             } else {
-
-                throw new Error("No image");
-
+                throw new Error();
             }
-
         })
-        .catch(err => {
-
-            console.warn(`Failed to load thumbnail: ${itemId}`, err);
-
+        .catch(() => {
             img.src = "img/logo.jpg";
-
         });
 }
 
-// Other functions
 function openPhotoModal(cardElement) {
     const img = cardElement.querySelector('.gallery-img');
     const modal = document.getElementById('photoModal');
     const modalImg = document.getElementById('modalImg');
     const infoWhere = document.getElementById('infoWhere');
     const infoWhen = document.getElementById('infoWhen');
+    const infoBy = document.getElementById('infoBy');
 
     if (!img || !modal) return;
 
     modalImg.src = img.src;
     infoWhere.textContent = img.getAttribute('data-info-where') || 'Unknown';
     infoWhen.textContent = img.getAttribute('data-info-when') || 'Unknown';
+    if (infoBy) {
+        infoBy.textContent = img.getAttribute('data-info-by') || 'Unknown Creator';
+    }
 
     modal.classList.add('show');
     modal.style.display = 'flex';
