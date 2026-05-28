@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rammstein On Roblox</title>
 
-  <meta name="description" content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
+  <meta name="description"
+    content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
   <meta name="theme-color" content="#ae1d1d" />
 
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://rammstein-on-roblox.github.io/" />
   <meta property="og:title" content="Rammstein On Roblox — Community Site" />
-  <meta property="og:description" content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
+  <meta property="og:description"
+    content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
   <meta property="og:image" content="https://rammstein-on-roblox.github.io/img/logo.jpg" />
 
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content="https://rammstein-on-roblox.github.io/" />
   <meta property="twitter:title" content="Rammstein On Roblox — Community Site" />
-  <meta property="twitter:description" content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
+  <meta property="twitter:description"
+    content="Welcome to the Rammstein On Roblox community website! Explore our virtual concert gallery, browse unique group apparel, and connect with our social media networks." />
   <meta property="twitter:image" content="https://rammstein-on-roblox.github.io/img/logo.jpg" />
-  
+
   <link rel="icon" type="image/jpg" href="img/logo.jpg">
   <link rel="stylesheet" href="bootstrap/styles.css">
   <link rel="stylesheet" href="styles.css">
@@ -31,6 +35,7 @@
       connect-src 'self' https:;
   ">
 </head>
+
 <body>
 
   <div id="loader">
@@ -41,29 +46,51 @@
 
   <div class="header-container">
     <header class="custom-header">
-        
-        <div class="brand-block">
-            <h1 class="desktop-logo">RAMMSTEIN ON ROBLOX</h1>
-            
-            <nav class="desktop-nav-container">
-                <button class="pc-nav-link" onclick="showSection('about')">About Us</button>
-                <button class="pc-nav-link" onclick="showSection('team')">Gallery</button>
-                <button class="pc-nav-link" onclick="showSection('shop')">Shop</button>
-            </nav>
+
+      <div class="brand-block">
+        <h1 class="desktop-logo">RAMMSTEIN ON ROBLOX</h1>
+
+        <nav class="desktop-nav-container">
+          <button class="pc-nav-link" onclick="showSection('about')">ABOUT US</button>
+          <button class="pc-nav-link" onclick="showSection('team')">GALLERY</button>
+          <button class="pc-nav-link" onclick="showSection('shop')">SHOP</button>
+        </nav>
+      </div>
+
+      <div class="mobile-logo-wrapper">
+        <img src="img/1.png" alt="Menu" class="mobile-logo-btn" onclick="toggleMobileMenu()">
+      </div>
+
+      <!-- Полноэкранное мобильное меню -->
+      <div id="mobileSidebar" class="mobile-sidebar">
+
+        <!-- 1. Верхняя часть: Кнопка закрытия по центру -->
+        <div class="mobile-close-wrapper">
+          <span class="mobile-close-btn" onclick="toggleMobileMenu()">&times;</span>
         </div>
 
-        <div class="mobile-logo-wrapper">
-            <img src="img/1.png" alt="Menu" class="mobile-logo-btn" onclick="toggleMobileMenu()">
+        <!-- 2. Средняя часть: Ссылки меню слева -->
+        <nav class="mobile-nav">
+          <button class="mobile-nav-link" onclick="handleMobileNav('about')">HOME</button>
+          <button class="mobile-nav-link" onclick="handleMobileNav('team')">GALLERY</button>
+          <button class="mobile-nav-link" onclick="handleMobileNav('shop')">SHOP</button>
+        </nav>
+        
+        <div class="mobile-video-container" onmousemove="resetControlsTimer()" onmouseleave="hideControlsImmediately()"
+          ontouchstart="resetControlsTimer()">
+          <video id="menuVideo" poster="img/Rammstein On Roblox Trailer-Обложка.jpg" loop muted playsinline
+            onclick="toggleVideoPlay()"></video>
+
+          <div id="videoControls" class="video-controls-overlay">
+            <button id="videoMuteBtn" class="video-mute-btn" style="color: #ae1d1d; border-color: #ae1d1d;"
+              onclick="toggleVideoSound(event)">SOUND: OFF</button>
+            <input type="range" id="videoVolumeSlider" class="video-volume-slider" min="0" max="1" step="0.05"
+              value="0.5" onclick="event.stopPropagation()" oninput="handleVolumeChange(this.value)">
+          </div>
         </div>
 
-        <div id="mobileSidebar" class="mobile-sidebar">
-            <nav class="mobile-nav">
-                <button class="mobile-nav-link" onclick="handleMobileNav('about')">About Us</button>
-                <button class="mobile-nav-link" onclick="handleMobileNav('team')">Gallery</button>
-                <button class="mobile-nav-link" onclick="handleMobileNav('shop')">Shop</button>
-            </nav>
-        </div>
-        
+      </div>
+
     </header>
   </div>
 
@@ -79,14 +106,12 @@
 
     <section id="team" class="section-content">
       <div class="row justify-content-center" style="font-family: 'GT-America-Mono-Regular', sans-serif;">
-        
+
         <div class="col-md-3 mb-4">
           <div class="card gallery-card visible" onclick="openPhotoModal(this)">
             <div class="gallery-img-container">
-              <img src="img/Sonne Chorus After Intro.png" class="gallery-img" alt="Sonne Chorus After Intro" 
-                   data-info-where="Berlin, Olympiastadion" 
-                   data-info-when="2026"
-                   data-info-by="danchik3421">
+              <img src="img/Sonne Chorus After Intro.png" class="gallery-img" alt="Sonne Chorus After Intro"
+                data-info-where="Berlin, Olympiastadion" data-info-when="2026" data-info-by="danchik3421">
               <div class="gallery-overlay">
                 <span class="view-btn">VIEW PHOTO</span>
               </div>
@@ -104,10 +129,8 @@
         <div class="col-md-3 mb-4">
           <div class="card gallery-card visible" onclick="openPhotoModal(this)">
             <div class="gallery-img-container">
-              <img src="img/Sonne Drop.png" class="gallery-img" alt="Sonne Drop" 
-                   data-info-where="Berlin, Olympiastadion" 
-                   data-info-when="2026"
-                   data-info-by="danchik3421">
+              <img src="img/Sonne Drop.png" class="gallery-img" alt="Sonne Drop"
+                data-info-where="Berlin, Olympiastadion" data-info-when="2026" data-info-by="danchik3421">
               <div class="gallery-overlay">
                 <span class="view-btn">VIEW PHOTO</span>
               </div>
@@ -121,14 +144,12 @@
             </div>
           </div>
         </div>
-        
+
         <div class="col-md-3 mb-4">
           <div class="card gallery-card visible" onclick="openPhotoModal(this)">
             <div class="gallery-img-container">
-              <img src="img/Sonne Ending.png" class="gallery-img" alt="Sonne Ending" 
-                   data-info-where="Berlin, Olympiastadion" 
-                   data-info-when="2026"
-                   data-info-by="danchik3421">
+              <img src="img/Sonne Ending.png" class="gallery-img" alt="Sonne Ending"
+                data-info-where="Berlin, Olympiastadion" data-info-when="2026" data-info-by="danchik3421">
               <div class="gallery-overlay">
                 <span class="view-btn">VIEW PHOTO</span>
               </div>
@@ -146,10 +167,8 @@
         <div class="col-md-3 mb-4">
           <div class="card gallery-card visible" onclick="openPhotoModal(this)">
             <div class="gallery-img-container">
-              <img src="img/Sonne Verse 2.png" class="gallery-img" alt="Sonne Verse 2" 
-                   data-info-where="Berlin, Olympiastadion" 
-                   data-info-when="2026"
-                   data-info-by="danchik3421">
+              <img src="img/Sonne Verse 2.png" class="gallery-img" alt="Sonne Verse 2"
+                data-info-where="Berlin, Olympiastadion" data-info-when="2026" data-info-by="danchik3421">
               <div class="gallery-overlay">
                 <span class="view-btn">VIEW PHOTO</span>
               </div>
@@ -178,7 +197,7 @@
         </div>
       </div>
     </section>
-    
+
     <section id="shop" class="section-content">
       <div class="shop-layout">
         <div class="shop-sidebar">
@@ -190,7 +209,8 @@
     </section>
   </main>
 
-  <footer class="text-white text-center py-3" style="background-color: rgba(0, 0, 0, 0); font-family: 'GT-America-Mono-Regular', sans-serif;">
+  <footer class="text-white text-center py-3"
+    style="background-color: rgba(0, 0, 0, 0); font-family: 'GT-America-Mono-Regular', sans-serif;">
     <p class="mb-0">Copyright &copy;2025-2026 Rammstein On Roblox. All Rights Reserved.</p>
   </footer>
 
@@ -198,7 +218,8 @@
     <span class="close-modal">&times;</span>
     <div class="modal-content-wrapper" onclick="event.stopPropagation()">
       <img id="modalImg" class="modal-img-content" src="" alt="">
-      <div id="modalCaption" class="modal-caption" style="font-family: 'GT-America-Mono-Regular', monospace; font-size: 14px;">
+      <div id="modalCaption" class="modal-caption"
+        style="font-family: 'GT-America-Mono-Regular', monospace; font-size: 14px;">
         <p>LOCATION: <span id="infoWhere" style="color: #fff;"></span></p>
         <p>DATE: <span id="infoWhen" style="color: #fff;"></span></p>
         <p>CREDITS: <span id="infoBy" style="color: #ffffff; font-weight: bold;"></span></p>
@@ -209,4 +230,5 @@
   <script src="bootstrap/scripts.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>

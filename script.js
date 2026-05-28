@@ -198,9 +198,126 @@ window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closePhotoModal();
 });
 
+let controlsTimer; // Переменная для хранения таймера активности
+
+// Функция сброса таймера: показывает панель и запускает отсчет в 1 секунду
+function resetControlsTimer() {
+    var controls = document.getElementById("videoControls");
+    if (controls) {
+        controls.classList.remove("hide-controls");
+    }
+    
+    clearTimeout(controlsTimer);
+    
+    // Если в течение 1000мс (1 сек) никаких движений нет — скрываем панель
+    controlsTimer = setTimeout(function() {
+        if (controls) {
+            controls.classList.add("hide-controls");
+        }
+    }, 1000);
+}
+
+// Мгновенное скрытие панели (например, когда убрали мышку с области видео)
+function hideControlsImmediately() {
+    clearTimeout(controlsTimer);
+    var controls = document.getElementById("videoControls");
+    if (controls) {
+        controls.classList.add("hide-controls");
+    }
+}
+
 function toggleMobileMenu() {
-    const sidebar = document.getElementById('mobileSidebar');
-    if (sidebar) sidebar.classList.toggle('open');
+    var sidebar = document.getElementById("mobileSidebar");
+    var video = document.getElementById("menuVideo");
+    var muteBtn = document.getElementById("videoMuteBtn");
+    var volumeSlider = document.getElementById("videoVolumeSlider");
+    
+    sidebar.classList.toggle("open");
+    
+    if (sidebar.classList.contains("open")) {
+        video.src = "img/trailer.mp4";
+        video.load();
+        
+        video.muted = true;
+        if (volumeSlider) {
+            video.volume = volumeSlider.value;
+        }
+        
+        if (muteBtn) {
+            muteBtn.innerText = "SOUND: OFF";
+            muteBtn.style.color = "#ae1d1d";
+            muteBtn.style.borderColor = "#ae1d1d";
+        }
+
+        video.play().catch(function(error) {
+            console.log("Autoplay blocked:", error);
+        });
+
+        // Включаем отображение панели управления при открытии меню
+        resetControlsTimer();
+    } else {
+        video.pause();
+        video.removeAttribute('src'); 
+        video.load();
+        
+        // Сбрасываем таймер и прячем панель при закрытии шторки
+        hideControlsImmediately();
+    }
+}
+
+// Поставить видео на паузу / снять с паузы по клику на экран видео
+function toggleVideoPlay() {
+    var video = document.getElementById("menuVideo");
+    if (video.paused) {
+        video.play();
+    } else {
+        video.pause();
+    }
+}
+
+// Клик по кнопке SOUND ON/OFF
+function toggleVideoSound(event) {
+    event.stopPropagation(); // Предотвращаем паузу видео от клика по контейнеру
+    var video = document.getElementById("menuVideo");
+    var muteBtn = document.getElementById("videoMuteBtn");
+    var volumeSlider = document.getElementById("videoVolumeSlider");
+    
+    if (video.muted) {
+        video.muted = false;
+        // Если ползунок стоял на нуле, принудительно дадим громкость
+        if (video.volume === 0) {
+            video.volume = 0.5;
+            if (volumeSlider) volumeSlider.value = 0.5;
+        }
+        muteBtn.innerText = "SOUND: ON";
+        muteBtn.style.color = "#5bb35f";
+        muteBtn.style.borderColor = "#5bb35f";
+    } else {
+        video.muted = true;
+        muteBtn.innerText = "SOUND: OFF";
+        muteBtn.style.color = "#ae1d1d"; // Меняется на красный цвет при выключении
+        muteBtn.style.borderColor = "#ae1d1d";
+    }
+}
+
+// Смещение ползунка громкости вручную
+function handleVolumeChange(value) {
+    var video = document.getElementById("menuVideo");
+    var muteBtn = document.getElementById("videoMuteBtn");
+    
+    video.volume = value;
+    
+    if (value > 0) {
+        video.muted = false;
+        muteBtn.innerText = "SOUND: ON";
+        muteBtn.style.color = "#5bb35f";
+        muteBtn.style.borderColor = "#5bb35f";
+    } else {
+        video.muted = true;
+        muteBtn.innerText = "SOUND: OFF";
+        muteBtn.style.color = "#ae1d1d"; // Красный, если убавили звук в ноль
+        muteBtn.style.borderColor = "#ae1d1d";
+    }
 }
 
 function handleMobileNav(sectionId) {
