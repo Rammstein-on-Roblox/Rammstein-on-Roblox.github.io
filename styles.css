@@ -82,10 +82,63 @@ a:hover {
 }
 
 .header-container {
+    position: relative;
+    z-index: 10;
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px 15px;
+}
+
+main {
+    position: relative;
+    z-index: 5;
+    flex: 1;
+}
+
+.about-inner-container {
+    position: relative;
+    z-index: 6;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.about-video-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    aspect-ratio: auto !important;
+    z-index: 1;
+    max-width: none !important;
+    margin: 0 !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+.about-video-container video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    right: -100%; 
+    left: auto;   
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75); 
+    transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
+    z-index: 25000; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    padding: 20px 30px 40px 30px;
+    box-sizing: border-box;
 }
 
 .custom-header {
@@ -468,26 +521,12 @@ a:hover {
 .mobile-sidebar {
     position: fixed;
     top: 0;
-    left: -250px;
-    width: 250px;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.95);
-    box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-    transition: left 0.3s ease;
-    z-index: 9999;
-    padding-top: 100px;
-}
-
-/* Полноэкранный контейнер меню */
-.mobile-sidebar {
-    position: fixed;
-    top: 0;
-    right: -100%; /* Изначально полностью спрятано за ПРАВЫМ экраном */
-    left: auto;   /* Сбрасываем левое позиционирование */
+    right: -100%; 
+    left: auto;   
     width: 100vw;
     height: 100vh;
     background-color: #000000; 
-    transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); /* Анимируем свойство right */
+    transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1); 
     z-index: 25000; 
     display: flex;
     flex-direction: column;
@@ -496,46 +535,41 @@ a:hover {
     box-sizing: border-box;
 }
 
-/* Состояние при открытии меню */
 .mobile-sidebar.open {
-    right: 0; /* Выезжает на экран справа */
+    right: 0; 
     left: auto;
 }
 
-/* Обертка для крестика (центрирование) */
 .mobile-close-wrapper {
     display: flex;
     justify-content: center;
     width: 100%;
 }
 
-/* Сам крестик сверху */
 .mobile-close-btn {
     color: #fff;
-    font-size: 60px; /* Большой заметный крестик */
+    font-size: 60px; 
     line-height: 1;
     cursor: pointer;
     font-family: Arial, sans-serif;
     user-select: none;
 }
 
-/* Сетка навигации */
 .mobile-nav {
     display: flex;
     flex-direction: column;
-    gap: 30px; /* Расстояние между кнопками */
+    gap: 30px; 
     margin-top: 40px;
-    align-items: flex-start; /* Выравнивание строго по левому краю */
+    align-items: flex-start; 
     padding-left: 10px;
 }
 
-/* Кнопки навигации */
 .mobile-nav-link {
     background: none;
     border: none;
     color: #fff;
     font-family: 'Rodchenko-Cond', sans-serif;
-    font-size: 2.2rem; /* Крупный агрессивный шрифт */
+    font-size: 2.2rem; 
     text-align: left;
     padding: 0;
     cursor: pointer;
@@ -548,7 +582,6 @@ a:hover {
     color: #b1b1b1;
 }
 
-/* Делаем контейнер относительным, чтобы позиционировать кнопку внутри него */
 .mobile-video-container {
     position: relative; 
     width: 100%;
@@ -562,7 +595,7 @@ a:hover {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    cursor: pointer; /* Показываем, что видео кликабельно */
+    cursor: pointer; 
 }
 
 .video-controls-overlay {
@@ -579,20 +612,17 @@ a:hover {
     border: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 10;
     
-    /* Добавляем плавность для появления и исчезновения */
     opacity: 1;
     visibility: visible;
     transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
-/* Класс, который будет добавляться через JS через 1 секунду затишья */
 .video-controls-overlay.hide-controls {
     opacity: 0;
     visibility: hidden;
-    pointer-events: none; /* Делает скрытые кнопки некликабельными */
+    pointer-events: none; 
 }
 
-/* Кнопка переключения звука */
 .video-mute-btn {
     background: transparent;
     border: 1px solid #ae1d1d;
@@ -607,7 +637,6 @@ a:hover {
     white-space: nowrap;
 }
 
-/* Ползунок громкости */
 .video-volume-slider {
     -webkit-appearance: none;
     appearance: none;
@@ -619,7 +648,6 @@ a:hover {
     cursor: pointer;
 }
 
-/* Стилизация ползунка (квадратный маркер под стиль Родченко) */
 .video-volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -637,6 +665,17 @@ a:hover {
     border-radius: 0;
     border: none;
     cursor: pointer;
+}
+
+.about-inner-container {
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.about-video-container {
+    width: 100%;
+    margin: 40px auto 0 auto;
 }
 
 @media (max-width: 991.98px) {

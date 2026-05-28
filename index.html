@@ -61,15 +61,12 @@
         <img src="img/1.png" alt="Menu" class="mobile-logo-btn" onclick="toggleMobileMenu()">
       </div>
 
-      <!-- Полноэкранное мобильное меню -->
       <div id="mobileSidebar" class="mobile-sidebar">
 
-        <!-- 1. Верхняя часть: Кнопка закрытия по центру -->
         <div class="mobile-close-wrapper">
           <span class="mobile-close-btn" onclick="toggleMobileMenu()">&times;</span>
         </div>
 
-        <!-- 2. Средняя часть: Ссылки меню слева -->
         <nav class="mobile-nav">
           <button class="mobile-nav-link" onclick="handleMobileNav('about')">HOME</button>
           <button class="mobile-nav-link" onclick="handleMobileNav('team')">GALLERY</button>
@@ -96,12 +93,27 @@
 
   <main class="container my-5">
     <section id="about" class="section-content active" style="font-family: 'GT-America-Mono-Regular', sans-serif">
-      <p class="text-center">
-        <span id="aboutText" class="fade-in"></span>
-      </p>
-      <p class="text-center">
-        <span id="aboutText2" class="fade-in"></span>
-      </p>
+      <div class="mobile-video-container about-video-container" onmousemove="resetAboutControlsTimer()" onmouseleave="hideAboutControlsImmediately()"
+        ontouchstart="resetAboutControlsTimer()">
+        <video id="aboutVideo" poster="img/Rammstein On Roblox Trailer-Обложка.jpg" loop muted playsinline
+          onclick="toggleAboutVideoPlay()"></video>
+
+        <div id="aboutVideoControls" class="video-controls-overlay">
+          <button id="aboutVideoMuteBtn" class="video-mute-btn" style="color: #ae1d1d; border-color: #ae1d1d;"
+            onclick="toggleAboutVideoSound(event)">SOUND: OFF</button>
+          <input type="range" id="aboutVideoVolumeSlider" class="video-volume-slider" min="0" max="1" step="0.05"
+            value="0.5" onclick="event.stopPropagation()" oninput="handleAboutVolumeChange(this.value)">
+        </div>
+      </div>
+
+      <div class="about-inner-container">
+        <p class="text-center">
+          <span id="aboutText" class="fade-in"></span>
+        </p>
+        <p class="text-center">
+          <span id="aboutText2" class="fade-in"></span>
+        </p>
+      </div>
     </section>
 
     <section id="team" class="section-content">
